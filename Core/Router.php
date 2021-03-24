@@ -6,5 +6,14 @@ namespace Core;
 
 class Router
 {
+    private const ROUTES = [
+      'UserController' => [
 
+      ]
+    ];
+
+    public static function start()
+    {
+
+    }
 }

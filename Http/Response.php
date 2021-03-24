@@ -35,7 +35,7 @@ class Response
 
 
     /**
-     * Сформировать json-ответ
+     * Сформировать json-ответ определенного формата
      * @param JsonMakerInterface $jsonMaker
      * @return string
      */
