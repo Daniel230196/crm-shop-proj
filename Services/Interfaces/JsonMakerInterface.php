@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Services\Interfaces;
 
-use Http\Request;
 use Http\Response;
 
 /**

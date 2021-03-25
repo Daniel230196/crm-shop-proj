@@ -16,8 +16,7 @@ class Router
      */
     private const ROUTES = [
         'UserController' => [
-            'login',
-            'logout'
+            
         ]
     ];
 
