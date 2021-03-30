@@ -38,4 +38,10 @@ abstract class BaseController
     {
 
     }
+
+    /**
+     * Метод будет вызван по дефолту
+     * @return mixed
+     */
+    abstract public function default();
 }

@@ -1,6 +1,9 @@
 <?php
 
-require 'vendor/autoload.php';
+declare(strict_types=1);
 
-    
-$test = new http\Request();
+require_once 'vendor/autoload.php';
+
+use App\Application;
+
+Application::start();
