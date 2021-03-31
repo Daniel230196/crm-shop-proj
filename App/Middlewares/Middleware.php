@@ -8,14 +8,14 @@ use Http\Request;
 
 abstract class Middleware
 {
-    /**
-     * Метод обработки зарпроса
-     * @param Request $request
-     */
+
+    protected ?Middleware $next;
+
     abstract public function handle(Request $request);
 
-    public function __invoke()
+    protected function then(Request $request)
     {
-        
+        $this->next->handle($request);
     }
+    
 }

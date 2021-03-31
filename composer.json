@@ -11,7 +11,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Http\\": "Http"
+            "Http\\": "Http",
+            "App\\": "App",
+            "App\\Controllers\\": "App/Controllers",
+            "App\\Middlewares\\": "App/Middlewares",
+            "Core\\": "Core"
+
         }
     },
     "description": "test-crm-app",

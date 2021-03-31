@@ -1,27 +1,32 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Controllers;
 
-use Http\Request;
-
+/**
+ * Class PageController
+ * @package App\Controllers
+ */
 class PageController extends BaseController
-{ 
-    protected $middleware;
+{
 
-    /**
-     * Путь к view-файлам
-     * @const VIEW_PATH
-     */
-    private const VIEW_PATH = __DIR__.'../views/';
-    public function __construct(Request $request)
+    private const VIEW_PATH = 'App/views/';
+    public function main()
     {
-        
+        include self::VIEW_PATH.'main.php';
     }
-    
-    public function render()
+    public function pipeline()
     {
+        include self::VIEW_PATH.'pipeline.php';
+    }
+    public function login()
+    {
+        include self::VIEW_PATH.'login.php';
+    }
 
+    public function default()
+    {
+        echo 'im default method';
     }
 }

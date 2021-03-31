@@ -37,6 +37,12 @@ class Request
      */
     private ?array $requestHeaders;
 
+    /**
+     * IP клиента
+     * @var string|null
+     */
+    private ?string $client;
+
     public function __construct()
     {
         $this->get = filter_var_array($_GET, INPUT_GET) == false ? null : $_GET;
@@ -44,6 +50,12 @@ class Request
         $this->requestHeaders = getallheaders();
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->uri = $_SERVER['REQUEST_URI'];
+        $this->client = $_SERVER['REMOTE_ADDR'] ?? null;
+    }
+
+    public function getIp(): ?string
+    {
+        return $this->client;
     }
 
     /**
@@ -52,18 +64,6 @@ class Request
      */
     private function headers(): ?array
     {
-        /*if(empty($_SERVER)){
-            return null;
-        }
-        $headers = [];
-        foreach($_SERVER as $key=>$value){
-            $match = substr($key,0,5);
-            if( $match === 'HTTP_'){
-                $headers[str_replace($match)] = $value;
-            }
-        }
-        return $headers;*/
-        var_dump($_SERVER);
         return getallheaders();
     }
 
@@ -76,4 +76,8 @@ class Request
         return !empty($this->headers()['HTTP_X_REQUESTED_WITH']);
     }
 
+    public function __get($name)
+    {
+        return $this->$name ?? null;
+    }
 }
