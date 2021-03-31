@@ -32,23 +32,32 @@ class Router
         'App/Controllers/',
         'App/Controllers/Api',
     ];
+
     /**
      * @const CONTROLLER_NAMESPACE
+     *
      */
     private const CONTROLLER_NAMESPACE = 'App\Controllers\\';
 
 
-    public function start(Request $request): void
+    /**
+     * @param Request $request
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function start(Request $request): array
     {
         $controller = self::CONTROLLER_NAMESPACE.$this->controllerName($request);
         $method = $this->method($request);
 
         if ((new \ReflectionClass($controller))->hasMethod($method) && (new \ReflectionMethod($controller,$method))->isPublic() ){
             $instance = new $controller($request);
-            $instance->$method();
+            //$instance->$method();
+
+            return [$instance, $method];
         }
 
-
+        return [];
     }
 
     /**
@@ -59,6 +68,7 @@ class Router
     private function controllerName(Request $request): string
     {
         $name = explode('/',$request->uri)[1];
+
 
         if(strtolower($name) === 'main' || empty($name) || !$this->controllerCheck($name) ){
             return 'PageController';
@@ -74,7 +84,7 @@ class Router
      */
     private function method(Request $request): string
     {
-        return  explode('/',$request->uri)[2] ?? 'default';
+        return explode('/',$request->uri)[2] ?? 'default';
     }
 
     /**

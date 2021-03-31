@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Middlewares;
 
+use Http\Request;
+
 /**
  * Class GuardMiddleware
  * @package App\Middlewares
@@ -13,8 +15,8 @@ namespace App\Middlewares;
 class GuardMiddleware extends Middleware
 {
 
-    public function handle()
+    public function handle(Request $request)
     {
-        // TODO: Implement handle() method.
+
     }
 }

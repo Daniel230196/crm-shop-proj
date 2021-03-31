@@ -24,13 +24,13 @@ class Application
 
     public static function start()
     {
+        Config::init();
 
         $request = new Request();
         $kernel = new Kernel();
         $kernel->route($request)
                ->handle($request);
 
-        Config::init();
 
     }
 }
