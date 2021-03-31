@@ -6,11 +6,16 @@
             "email": "dan-n-70s@mail.ru"
         }
     ],
-    "require": {},
+    "require": {
+        "ext-xmlwriter" : "*"
+    },
     "autoload": {
         "psr-4": {
             "Http\\": "Http"
         }
     },
-    "description": "test-crm-app"
+    "description": "test-crm-app",
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.5"
+    }
 }

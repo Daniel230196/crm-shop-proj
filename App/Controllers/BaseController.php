@@ -32,10 +32,11 @@ abstract class BaseController
     public function __construct(Request $request)
     {
         $this->request = $request;
+ 
     }
 
-    protected function middleware(Closure $next = null, array $options = [] ): void
+    public function middleware()
     {
-
+        
     }
 }
