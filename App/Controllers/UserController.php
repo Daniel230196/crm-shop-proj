@@ -9,4 +9,9 @@ class UserController extends BaseController
     protected $middleware = [
         'auth' => AuthService::class
     ];
+
+    public function default()
+    {
+        
+    }
 }
