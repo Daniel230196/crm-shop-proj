@@ -11,6 +11,5 @@ class ResourceController extends BaseController
 {
     public function default()
     {
-        echo 'ResourceDefault';
     }
 }

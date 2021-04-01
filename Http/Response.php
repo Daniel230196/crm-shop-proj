@@ -45,4 +45,9 @@ class Response
     }
 
 
+    public function resolve()
+    {
+
+    }
+
 }
