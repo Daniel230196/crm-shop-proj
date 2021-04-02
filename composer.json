@@ -13,7 +13,10 @@
             "App\\": "App",
             "App\\Controllers\\": "App/Controllers",
             "App\\Middlewares\\": "App/Middlewares",
-            "Core\\": "Core"
+            "Core\\": "Core",
+            "Services\\" : "Services",
+            "Services\\Interfaces\\" : "Services/Interfaces",
+            "Services\\Traits\\" : "Services/Traits"
 
         }
     },

@@ -2,7 +2,9 @@
 
 
 return [
-  "mysql" => [
-      'host' => 'mysql: host = localhost, user = , password = '
+  'mysql' => [
+      'host' => 'mysql: host = localhost',
+      'user' => 'ivan',
+      'password' => 'eyf89cp8'
   ]
 ];
