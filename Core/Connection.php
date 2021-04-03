@@ -5,6 +5,10 @@ namespace Core;
 
 
 use App\Config;
+use Core\Exceptions\ConnectionException;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
 use Services\Traits\SingletonTrait;
 
 /**
@@ -16,17 +20,34 @@ class Connection
 {
     use SingletonTrait;
 
-    private string $test;
-
-    private \PDO $pdo;
-
-
     private function __construct()
     {
         $conf = Config::database('mysql');
         try{
-            $this->pdo = new \PDO($conf['host'],$conf['user'], $conf['password']);
+            self::$instance = new \PDO($conf['host'],$conf['user'], $conf['password']);
         }catch (\PDOException $exception){
+            echo $exception->getMessage();
+            // TODO :: handle db exceptions 
+        }
+    }
+
+
+    /**
+     * Направляет все неизвестные классу методы в класс подключения к базе данных, с проверкой на существование
+     * @param string $method Название метода
+     * @param array $args Аргументы для метода
+     * @throws ConnectionException 
+     */
+    public function __call(string $method, array $args)
+    {
+        try {
+            if ( (new ReflectionClass(self::$instance))->hasMethod($method) && (new ReflectionMethod(self::$instance, $method))->isPublic() ){
+                return self::$instance->$method(...$args);
+            }else{
+                throw new ConnectionException('Data method not found', 401);
+            }
+        }catch(ReflectionException $exception){
+            //TODO : handle
             echo $exception->getMessage();
         }
     }

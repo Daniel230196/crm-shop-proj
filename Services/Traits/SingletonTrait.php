@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 namespace Services\Traits;
 
+
+/**
+ * Trait SingletonTrait
+ * Для синглтон-объектов
+ * @package Services\Traits
+ */
 trait SingletonTrait
 {
     protected static $instance;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Cassandra\Collection;
+use App\Models\Collections;
 
 /**
  * Class DomainModel
@@ -33,14 +33,17 @@ abstract class DomainModel
     {
         return $this->id;
     }
-
-    /**
-     * @param string $type
-     * @return Collection
-     */
-    public static function getCollection(string $type): Collection
+    public function collection(): Collections\Collection
     {
-        return Collection::getCollection($type);
+        return static::getCollection(static::class);
+    }
+    /**
+     * @param ?string $type
+     * @return Collections\Collection
+     */
+    public static function getCollection(?string $type=null): ?Collections\Collection
+    {
+        //TODO: implement method
     }
 
     public function markDirty()

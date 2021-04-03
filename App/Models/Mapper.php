@@ -8,35 +8,44 @@ use Core\Connection;
 
 abstract class Mapper
 {
-    private Connection $connection;
+    protected static Connection $connection;
 
     public function __construct()
     {
-        $this->connection = Connection::getInstance();
+        static::$connection = Connection::getInstance();
     }
 
-    public function find(int $id)
+    /**
+     * Найти объект по ID
+     * @param int $id
+     * @return DomainModel|null
+     */
+    public function find(int $id): ?DomainModel
     {
         $this->selectStmt()->execute([$id]);
         $row = $this->selectStmt()->fetch();
+        if (! is_array($row) )  { return null; }
+        if (!$row['id']){ return null; }
+        return $this->createObj($row);
     }
 
+    /**
+     * @param array $raw
+     * @return DomainModel
+     */
     public function createObj(array $raw): DomainModel
     {
         return $this->doCreateObj($raw);
-
     }
 
     public function insert(DomainModel $model)
     {
         $this->doInsert($model);
-
     }
 
     abstract public function update(DomainModel $model);
     abstract protected function selectStmt() : \PDOStatement;
     abstract protected function doCreateObj(array $raw): DomainModel;
     abstract protected function doInsert(DomainModel $model);
-    abstract protected function targetClass(): string;
 
 }
