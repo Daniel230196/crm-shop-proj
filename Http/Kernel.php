@@ -48,7 +48,11 @@ class Kernel
         return $this;
     }
 
-
+    /**
+     * Пропускает запрос через обработчики.
+     * Метод должен быть вызыван после метода $this->route()
+     * @param Request $request
+     */
     public function thruPipeline(Request $request)
     {
         $pipeline = new Pipeline($request, $this->routingParams);
