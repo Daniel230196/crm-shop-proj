@@ -14,7 +14,8 @@ class PageController extends BaseController
 {
     protected array $middleware = [
         'pipeline' => [
-            GuardMiddleware::class, 'guard' => []
+            GuardMiddleware::class => ['admin', 'manager'],
+
         ]
     ];
     private const VIEW_PATH = 'App/views/';
