@@ -12,7 +12,7 @@ class UserCollection extends Collection
      */
     protected function targetClass(): string
     {
-        return App\Models\User::class;
+        return \App\Models\User::class;
     }
 
 

@@ -9,6 +9,10 @@
 </head>
 <body>
 <h1> Логин </h1>
-
+<form action="">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+</form>
 </body>
 </html>

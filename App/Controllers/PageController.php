@@ -14,10 +14,10 @@ class PageController extends BaseController
 {
     protected array $middleware = [
         'pipeline' => [
-            GuardMiddleware::class => ['admin', 'manager'],
-
+            GuardMiddleware::class => ['admin', 'user'],
         ]
     ];
+
     private const VIEW_PATH = 'App/views/';
     public function main()
     {

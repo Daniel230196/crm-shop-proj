@@ -24,15 +24,21 @@ abstract class Collection implements \Iterator
 
     private array $objects;
     private int $pointer;
-    private $result;
 
-    public function __construct(?array $row = null, ?Mapper $mapper = null)
+
+    /**
+     * Collection constructor.
+     * @param array $row
+     * @param Mapper|null $mapper
+     * @throws OrmCollectionException
+     */
+    public function __construct(array $row = [], ?Mapper $mapper = null)
     {
-        if (!is_null($row) && !is_null($mapper)) {
-            $this->row = $row;
-            $this->total = count($row);
+        if( count($row) && is_null($mapper)){
+            throw new OrmCollectionException();
         }
-
+        $this->row = $row;
+        $this->total = count($row);
         $this->mapper = $mapper;
     }
 
@@ -131,5 +137,7 @@ abstract class Collection implements \Iterator
             $this->objects[$num] = $this->mapper->createObj($this->row[$num]);
             return $this->objects[$num];
         }
+
+        return null;
     }
 }

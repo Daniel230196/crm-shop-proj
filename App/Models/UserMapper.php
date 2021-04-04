@@ -9,11 +9,15 @@ class UserMapper extends Mapper
     private $selectStmt;
     private $insertStmt;
     private $updateStmt;
+    private $authStmt;
 
     public function __construct()
     {
         parent::__construct();
 
+        $this->authStmt = static::$connection->prepare(
+            'SELECT *FROM users WHERE login=?,password=?'
+        );
         $this->selectStmt = static::$connection->prepare(
             'SELECT * FROM users WHERE id=?'
         );
@@ -35,13 +39,24 @@ class UserMapper extends Mapper
         return $this->selectStmt;
     }
 
-    protected function doCreateObj(array $raw): DomainModel
+    protected function doCreateObj(array $row): DomainModel
     {
-        $obj = new User($raw);
+        $obj = new User($row);
     }
 
-    protected function doInsert(DomainModel $model)
+    protected function doInsert(DomainModel $user)
     {
-        return $this->insertStmt;
+        $values = [
+          $user->getLogin(),
+          $user->getPassword(),
+          $user->getCategory_id(),
+          $user->getId()
+        ];
+        $this->insertStmt->execute($values);
+    }
+
+    public function checkUser($values): bool
+    {
+        return $this->authStmt->execute($values);
     }
 }

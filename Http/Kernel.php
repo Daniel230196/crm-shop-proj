@@ -19,6 +19,13 @@ class Kernel
      */
     private array $routingParams;
 
+    /**
+     * Дефолтные обработчики для каждого запроса
+     * @var array
+     */
+    private array $middleware = [
+
+    ];
 
     public function __construct()
     {
@@ -32,6 +39,7 @@ class Kernel
     }
 
     /**
+     * Маршрутизация запроса , с сохранением параметров для дальнейшей обработки
      * @param Request $request
      * @return $this
      */
@@ -41,7 +49,7 @@ class Kernel
         try{
             $this->routingParams = $router->start($request);
         }catch(\ReflectionException $e){
-
+            exit();
             //TODO: Handle exception
         }
 
