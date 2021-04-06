@@ -13,7 +13,7 @@ use App\Middlewares\GuardMiddleware;
 class MainController extends BaseController
 {
     protected array $middleware = [
-        'pipeline' => [
+        'pipeline|main' => [
             GuardMiddleware::class => ['admin', 'user'],
         ]
     ];
@@ -34,6 +34,6 @@ class MainController extends BaseController
 
     public function default()
     {
-        echo 'im default method';
+        $this->login();
     }
 }

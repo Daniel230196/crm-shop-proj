@@ -24,6 +24,8 @@ abstract class Mapper
     {
         $this->selectStmt()->execute([$id]);
         $row = $this->selectStmt()->fetch();
+        $this->selectStmt()->closeCursor();
+
         if (! is_array($row) )  { return null; }
         if (!$row['id']){ return null; }
         return $this->createObj($row);

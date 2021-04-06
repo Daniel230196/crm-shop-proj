@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Core;
 
+use App\Controllers\BaseController;
+use Core\Exceptions\RouteException;
 use Http\Request;
 
 class Router
@@ -34,6 +36,11 @@ class Router
     ];
 
     /**
+     * Инстанс и метод контроллера
+     * @var array
+     */
+    private array $statement;
+    /**
      * @const CONTROLLER_NAMESPACE
      *
      */
@@ -44,20 +51,28 @@ class Router
      * @param Request $request
      * @return array
      * @throws \ReflectionException
+     * @throws RouteException
      */
     public function start(Request $request): array
     {
-        $controller = self::CONTROLLER_NAMESPACE.$this->controllerName($request);
+        $controller = self::CONTROLLER_NAMESPACE . $this->controllerName($request);
         $method = $this->method($request);
+        $instance = new $controller($request);
+        $this->statement['controller'] = $instance;
 
-        if ((new \ReflectionClass($controller))->hasMethod($method) && (new \ReflectionMethod($controller,$method))->isPublic() ){
-            $instance = new $controller($request);
+        if ((new \ReflectionClass($controller))->hasMethod($method) && (new \ReflectionMethod($controller, $method))->isPublic()) {
             //$instance->$method();
-
-            return [$instance, $method];
+            $this->statement = ['controller' => $instance, 'action' => $method];
+            return $this->getMiddlewares($this->statement);
+        }else{
+            throw new RouteException('invalid controller method', 409);
         }
 
-        return [];
+    }
+
+    public function getStatement(): array
+    {
+        return $this->statement;
     }
 
     /**
@@ -67,14 +82,14 @@ class Router
      */
     private function controllerName(Request $request): string
     {
-        $name = explode('/',$request->uri)[1];
+        $name = explode('/', $request->uri)[1];
 
 
-        if(strtolower($name) === 'main' || empty($name) || !$this->controllerCheck($name) ){
+        if (strtolower($name) === 'main' || empty($name) || !$this->controllerCheck($name)) {
             return 'MainController';
         }
 
-        return ucfirst(strtolower($name)).'Controller';
+        return ucfirst(strtolower($name)) . 'Controller';
     }
 
     /**
@@ -84,7 +99,8 @@ class Router
      */
     private function method(Request $request): string
     {
-        return explode('/',$request->uri)[2] ?? 'default';
+        return explode('/', $request->uri)[2] ?? 'default';
+        //TODO: зарефакторить получение названия метода в Request
     }
 
     /**
@@ -95,9 +111,40 @@ class Router
     private function controllerCheck(string $name): bool
     {
         $checkResults = [];
-        foreach(self::CONTROLLER_PATHS as $path){
-            $checkResults[] = file_exists($path.$name.'.php');
+        foreach (self::CONTROLLER_PATHS as $path) {
+            $checkResults[] = file_exists($path . $name . '.php');
         }
         return in_array(true, $checkResults);
     }
+
+    /**
+     * Получить middleware в соответствии с методом контроллера
+     * @param array $params
+     * @return array|null
+     * @trows RouteException
+     */
+    private function getMiddlewares(array $params): ?array
+    {
+        if (count($params) !== 2 || !($params['controller'] instanceof BaseController)) {
+            throw new RouteException('invalid middleware params', 406);
+        }
+
+        $middleware = $params['controller']->middleware();
+
+        if (!is_null($middleware)) {
+            $result = [];
+            foreach( $middleware as $key=>$class){
+                $methodControl = explode('|' , $key );
+                if(in_array($params['method'], $methodControl)){
+                    $result[] = $class;
+                }else{
+                    continue;
+                }
+            }
+            return $result;
+        }
+
+        return [];
+    }
+
 }

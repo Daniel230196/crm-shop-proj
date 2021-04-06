@@ -6,8 +6,8 @@ namespace App\Controllers;
 
 class UserController extends BaseController
 {
-    protected $middleware = [
-        'auth' => AuthService::class
+    protected array $middleware = [
+
     ];
 
     public function default()

@@ -26,7 +26,7 @@ class User extends DomainModel
 
         $this->login = $row['login'];
         $this->password = $row['password'];
-        $this->category_id = $row['cathegory_id'];
+        $this->category_id = $row['category_id'];
         parent::__construct($row['id']);
     }
 

@@ -29,7 +29,12 @@ class Application
         $request = new Request();
         $kernel = new Kernel();
         $kernel->route($request)
-               ->handle($request)
-               ->thruPipeline($request);
+            ->thruPipeline($request)
+            ->handle($request);
+    }
+
+    private function makeRequest(): Request
+    {
+        //TODO: implement
     }
 }

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Http;
 
-use App\Middlewares\TestMiddleware;
-use App\Middlewares\TestMiddleware2;
-use App\Middlewares\TestMiddleware3;
+use Core\Exceptions\RouteException;
 use Core\Router;
 
 /**
@@ -17,20 +15,24 @@ use Core\Router;
 class Kernel
 {
     /**
-     * Параметры маршрутизации для обработчика запроса
+     * Инстанс контроллера и метод
      * @var array
      */
-    private array $routingParams;
+    private array $routeAction;
 
     /**
      * Дефолтные обработчики для каждого запроса
      * @var array
      */
     private array $middleware = [
-        TestMiddleware::class,
-        TestMiddleware2::class,
-        TestMiddleware3::class,
+
     ];
+
+    /**
+     * Обработчики запросов полученные при маршрутизации
+     * @var array
+     */
+    private array $routeMiddleware = [];
 
     public function __construct()
     {
@@ -39,6 +41,7 @@ class Kernel
 
     public function handle(Request $request): Kernel
     {
+        //TODO: реализовать резрешение routeAction в response , добавить проверку запроса на наличие специфических заголовков, обработать нужным образом, сформировать ответ
         return $this;
     }
 
@@ -51,9 +54,14 @@ class Kernel
     {
         $router = new Router();
         try{
-            $this->routingParams = $router->start($request);
+            $this->routeMiddleware = $router->start($request);
+            $this->routeAction = $router->getStatement();
         }catch(\ReflectionException $e){
             echo $e->getMessage();
+            exit();
+            //TODO: Handle exception
+        }catch (RouteException $routeEx){
+            echo $routeEx->getMessage();
             exit();
             //TODO: Handle exception
         }
@@ -66,12 +74,19 @@ class Kernel
      * Метод должен быть вызыван после метода $this->route()
      * @param Request $request
      */
-    public function thruPipeline(Request $request): void
+    public function thruPipeline(Request $request): Kernel
     {
-        foreach ($this->middleware as $key=>$middleware){
-            $next = $this->middleware[$key + 1] ?? null;
-            $instance = $next ? new $middleware(new $next()) : new $middleware(null);
+        $middlewares = array_merge($this->middleware, $this->routeMiddleware);
 
+        if (!empty($this->routingParams)) {
+
+            foreach ($middlewares as $key=>$middleware){
+                $next = $this->middleware[$key + 1] ?? null;
+                $instance = $next ? new $middleware(new $next()) : new $middleware(null);
+                //TODO: реализовать формирование списка middleware
+            }
         }
+
+        return $this;
     }
 }

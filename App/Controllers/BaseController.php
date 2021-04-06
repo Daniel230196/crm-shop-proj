@@ -35,9 +35,9 @@ abstract class BaseController
  
     }
 
-    public function middleware()
+    public function middleware(): array
     {
-        
+        return $this->middleware;
     }
 
     /**
