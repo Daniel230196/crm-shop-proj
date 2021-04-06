@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Http;
 
+use App\Middlewares\TestMiddleware;
+use App\Middlewares\TestMiddleware2;
+use App\Middlewares\TestMiddleware3;
 use Core\Router;
 
 /**
@@ -24,7 +27,9 @@ class Kernel
      * @var array
      */
     private array $middleware = [
-
+        TestMiddleware::class,
+        TestMiddleware2::class,
+        TestMiddleware3::class,
     ];
 
     public function __construct()
@@ -34,7 +39,6 @@ class Kernel
 
     public function handle(Request $request): Kernel
     {
-
         return $this;
     }
 
@@ -49,6 +53,7 @@ class Kernel
         try{
             $this->routingParams = $router->start($request);
         }catch(\ReflectionException $e){
+            echo $e->getMessage();
             exit();
             //TODO: Handle exception
         }
@@ -61,9 +66,12 @@ class Kernel
      * Метод должен быть вызыван после метода $this->route()
      * @param Request $request
      */
-    public function thruPipeline(Request $request)
+    public function thruPipeline(Request $request): void
     {
-        $pipeline = new Pipeline($request, $this->routingParams);
-        $pipeline;
+        foreach ($this->middleware as $key=>$middleware){
+            $next = $this->middleware[$key + 1] ?? null;
+            $instance = $next ? new $middleware(new $next()) : new $middleware(null);
+
+        }
     }
 }

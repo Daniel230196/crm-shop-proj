@@ -6,10 +6,13 @@ namespace App\Models;
 
 class UserMapper extends Mapper
 {
-    private $selectStmt;
-    private $insertStmt;
-    private $updateStmt;
-    private $authStmt;
+    /**
+     *
+     */
+    private \PDOStatement $selectStmt;
+    private \PDOStatement $insertStmt;
+    private \PDOStatement $updateStmt;
+    private \PDOStatement $authStmt;
 
     public function __construct()
     {
@@ -39,9 +42,9 @@ class UserMapper extends Mapper
         return $this->selectStmt;
     }
 
-    protected function doCreateObj(array $row): DomainModel
+    protected function doCreateObj(array $raw): DomainModel
     {
-        $obj = new User($row);
+        $obj = new User($raw);
     }
 
     protected function doInsert(DomainModel $user)
@@ -55,8 +58,13 @@ class UserMapper extends Mapper
         $this->insertStmt->execute($values);
     }
 
-    public function checkUser($values): bool
+    /**
+     * @param array $values логин/пароль пользователя
+     * @return ?array
+     */
+    public function checkUser(array $values) : ?array
     {
-        return $this->authStmt->execute($values);
+        $this->authStmt->execute($values);
+        return $this->authStmt->fetch();
     }
 }

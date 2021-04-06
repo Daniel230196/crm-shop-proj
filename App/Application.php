@@ -29,8 +29,7 @@ class Application
         $request = new Request();
         $kernel = new Kernel();
         $kernel->route($request)
-               ->handle($request);
-
-
+               ->handle($request)
+               ->thruPipeline($request);
     }
 }

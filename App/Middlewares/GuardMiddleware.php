@@ -15,7 +15,8 @@ use Http\Request;
 class GuardMiddleware extends Middleware
 {
 
-    public function handle(Request $request)
+    public function handle(Request $request, ?Middleware $middleware = null)
     {
+
     }
 }

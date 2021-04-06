@@ -16,8 +16,8 @@ class Router
         'UserController' => [],
         'ApiController' => [],
         'ResourceController' => [],
-        'PageController' => [
-            'main',
+        'MainController' => [
+            'index',
             'login',
             'pipeline',
             'invoices'
@@ -71,7 +71,7 @@ class Router
 
 
         if(strtolower($name) === 'main' || empty($name) || !$this->controllerCheck($name) ){
-            return 'PageController';
+            return 'MainController';
         }
 
         return ucfirst(strtolower($name)).'Controller';
@@ -88,7 +88,7 @@ class Router
     }
 
     /**
-     * Проверить наличие соответствующего классу-контроллера файла в папке Controllers
+     * Проверить наличие файла с классом в соответствии с CONTROLLER_PATHS
      * @param string $name
      * @return bool
      */

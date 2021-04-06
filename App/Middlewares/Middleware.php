@@ -11,11 +11,19 @@ abstract class Middleware
 
     protected ?Middleware $next;
 
+
+    public function __construct(?Middleware $next = null)
+    {
+        $this->next = $next;
+    }
+
     abstract public function handle(Request $request);
 
-    protected function then(Request $request)
+    protected function then(Request $request): void
     {
-        $this->next->handle($request);
+        if(!is_null($this->next)){
+            $this->next->handle($request);
+        }
     }
-    
+
 }

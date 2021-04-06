@@ -38,9 +38,9 @@ abstract class Mapper
         return $this->doCreateObj($raw);
     }
 
-    public function insert(DomainModel $model)
+    public function insert(DomainModel $model): bool
     {
-        $this->doInsert($model);
+        return $this->doInsert($model);
     }
 
     abstract public function update(DomainModel $model);

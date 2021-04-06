@@ -10,7 +10,7 @@ use App\Middlewares\GuardMiddleware;
  * Class PageController
  * @package App\Controllers
  */
-class PageController extends BaseController
+class MainController extends BaseController
 {
     protected array $middleware = [
         'pipeline' => [

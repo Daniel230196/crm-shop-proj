@@ -4,7 +4,7 @@
 return [
   'mysql' => [
       'host' => 'mysql: host = localhost',
-      'user' => 'ivan',
+      'user' => 'root',
       'password' => 'eyf89cp8'
   ]
 ];
