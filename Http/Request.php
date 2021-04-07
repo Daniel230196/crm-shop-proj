@@ -76,8 +76,47 @@ class Request
         return !empty($this->headers()['HTTP_X_REQUESTED_WITH']);
     }
 
-    public function __get($name)
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get(string $name)
     {
-        return $this->$name ?? null;
+        return isset($this->$name) ? $this->$name : null;
+    }
+
+    /**
+     * Получить метод контроллера из строки запроса
+     * @return ?string
+     */
+    public function action(): ?string
+    {
+
+        $method = $this->explodeUri()[2] ?? null;
+
+        if(!is_null($method)){
+            return strpos($method, '?') ? stristr($method, '?', true) : $method ;
+        }
+
+        return null;
+    }
+
+    /**
+     * Полчить имя контроллера
+     * @return ?string
+     */
+    public function controller(): ?string
+    {
+        return $this->explodeUri()[1] ?? null;
+
+    }
+
+    /**
+     * Разбить строку запроса
+     * @return array
+     */
+    private function explodeUri(): array
+    {
+        return explode('/',$this->uri);
     }
 }

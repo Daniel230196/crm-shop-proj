@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Middlewares;
 
 use Http\Request;
+use Http\Response;
 
 /**
  * Class GuardMiddleware
@@ -15,8 +16,9 @@ use Http\Request;
 class GuardMiddleware extends Middleware
 {
 
-    public function handle(Request $request, ?Middleware $middleware = null)
+    public function __invoke(Request $request, Response $response)
     {
-
+        // TODO: Implement __invoke() method.
+        $this->then($request, $response);
     }
 }
