@@ -17,8 +17,16 @@ abstract class Middleware
         $this->next = $next;
     }
 
+    /**
+     * Основной метод обработки запроса для настоящего Middleware
+     * @param Request $request
+     */
     abstract public function handle(Request $request);
 
+    /**
+     * Метод, который будет вызван посредником после handle
+     * @param Request $request
+     */
     protected function then(Request $request): void
     {
         if(!is_null($this->next)){

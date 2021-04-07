@@ -16,7 +16,7 @@ class Response
     private ?string $content;
 
     /**
-     * HTTP-статус ответа
+     * HTTP статус-код ответа
      * @var int
      */
     private int $statusCode;
@@ -26,7 +26,7 @@ class Response
      */
     private string $statusText;
 
-    public function __construct(string $statusText,$statusCode = 200, ?string $content="")
+    public function __construct(string $statusText, $statusCode = 200, ?string $content="")
     {
         $this->content = $content;
         $this->statusCode = $statusCode;

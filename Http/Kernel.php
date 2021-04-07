@@ -15,7 +15,13 @@ use Core\Router;
 class Kernel
 {
     /**
-     * Инстанс контроллера и метод
+     * Сущность ответа сервера
+     * @var Response
+     */
+    private Response $response;
+
+    /**
+     * Инстанс контроллера и его метод
      * @var array
      */
     private array $routeAction;
@@ -36,12 +42,13 @@ class Kernel
 
     public function __construct()
     {
-
+        $this->response = new Response('ok');
     }
 
     public function handle(Request $request): Kernel
     {
         //TODO: реализовать резрешение routeAction в response , добавить проверку запроса на наличие специфических заголовков, обработать нужным образом, сформировать ответ
+
         return $this;
     }
 

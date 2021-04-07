@@ -73,11 +73,30 @@ class Request
      */
     public function isAjax(): bool
     {
-        return !empty($this->headers()['HTTP_X_REQUESTED_WITH']);
+        return !empty($this->headers()['X-Requested-With']) ||
+                strpos($this->getHeader('Accepts'), 'application/json');
     }
 
     public function __get($name)
     {
         return $this->$name ?? null;
+    }
+
+    public function method(): ?string
+    {
+        $uriParts = explode('/',$this->uri);
+
+        if(isset($uriParts[2])){
+          return strpos($uriParts[2],'?') ?
+                 explode('?',$uriParts[2])[0] :
+                 $uriParts[2];
+        }
+
+        return null;
+    }
+
+    public function getHeader($key): string
+    {
+        return $this->headers()[$key];
     }
 }

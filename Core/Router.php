@@ -64,9 +64,10 @@ class Router
             //$instance->$method();
             $this->statement = ['controller' => $instance, 'action' => $method];
             return $this->getMiddlewares($this->statement);
-        }else{
-            throw new RouteException('invalid controller method', 409);
         }
+
+        throw new RouteException('invalid controller method', 409);
+
 
     }
 
@@ -85,7 +86,7 @@ class Router
         $name = explode('/', $request->uri)[1];
 
 
-        if (strtolower($name) === 'main' || empty($name) || !$this->controllerCheck($name)) {
+        if (empty($name) || strtolower($name) === 'main' || !$this->controllerCheck($name)) {
             return 'MainController';
         }
 
@@ -99,7 +100,7 @@ class Router
      */
     private function method(Request $request): string
     {
-        return explode('/', $request->uri)[2] ?? 'default';
+        return $request->method() ?? 'default';
         //TODO: зарефакторить получение названия метода в Request
     }
 
@@ -114,7 +115,7 @@ class Router
         foreach (self::CONTROLLER_PATHS as $path) {
             $checkResults[] = file_exists($path . $name . '.php');
         }
-        return in_array(true, $checkResults);
+        return in_array(true, $checkResults, true);
     }
 
     /**
@@ -135,7 +136,7 @@ class Router
             $result = [];
             foreach( $middleware as $key=>$class){
                 $methodControl = explode('|' , $key );
-                if(in_array($params['method'], $methodControl)){
+                if(in_array($params['action'], $methodControl, true)){
                     $result[] = $class;
                 }else{
                     continue;
