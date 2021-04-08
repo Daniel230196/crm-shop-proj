@@ -19,6 +19,7 @@ class MainController extends BaseController
     ];
 
     private const VIEW_PATH = 'App/views/';
+
     public function main()
     {
         include self::VIEW_PATH.'main.php';

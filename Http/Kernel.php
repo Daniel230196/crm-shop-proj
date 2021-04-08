@@ -38,7 +38,14 @@ class Kernel
      * Обработчики запросов полученные при маршрутизации
      * @var array
      */
-    private array $routeMiddleware = [];
+    private array $routeMiddleware = [
+
+    ];
+
+    /**
+     * @var Response
+     */
+    private Response $response;
 
     public function __construct()
     {
@@ -80,20 +87,44 @@ class Kernel
      * Пропускает запрос через обработчики.
      * Метод должен быть вызыван после метода $this->route()
      * @param Request $request
+     * @return Kernel
      */
     public function thruPipeline(Request $request): Kernel
     {
-        $middlewares = array_merge($this->middleware, $this->routeMiddleware);
+        $middlewares = $this->routeMiddleware ?
+            array_merge($this->middleware, $this->routeMiddleware) :
+            $this->middleware;
 
-        if (!empty($this->routingParams)) {
+        $response = new Response(
+            [],
+            200,
+            $this->resolveAction()
+        );
+        $this->response = $response;
 
-            foreach ($middlewares as $key=>$middleware){
+        if(!empty($middlewares[0])){
+            foreach ($middlewares as $key=>&$middleware){
                 $next = $this->middleware[$key + 1] ?? null;
-                $instance = $next ? new $middleware(new $next()) : new $middleware(null);
+                $middleware = $next ? new $middleware(new $next()) : new $middleware(null);
                 //TODO: реализовать формирование списка middleware
             }
+            $middlewares[0]($request, $response);
         }
 
         return $this;
+    }
+
+    public function terminate()
+    {
+        $this->response->resolve();
+    }
+
+    /**
+     * Выполнить метод контроллера
+     * @return mixed
+     */
+    private function resolveAction()
+    {
+        return $this->routeAction['controller']->{$this->routeAction['action']}();
     }
 }

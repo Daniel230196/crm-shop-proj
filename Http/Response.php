@@ -16,7 +16,7 @@ class Response
     private ?string $content;
 
     /**
-     * HTTP статус-код ответа
+     * HTTP-статус ответа
      * @var int
      */
     private int $statusCode;
@@ -26,11 +26,17 @@ class Response
      */
     private string $statusText;
 
-    public function __construct(string $statusText, $statusCode = 200, ?string $content="")
+    /**
+     * Заголовки ответа
+     * @var array
+     */
+    private array $headers;
+
+    public function __construct(array $headers ,$statusCode = 200, ?string $content="")
     {
         $this->content = $content;
         $this->statusCode = $statusCode;
-        $this->statusText = $statusText;
+        $this->headers = $headers;
     }
 
 
@@ -44,10 +50,28 @@ class Response
         return $jsonMaker->makeJson($this);
     }
 
-
     public function resolve()
     {
-
+        $this->sendHeaders();
+        $this->sendContent();
     }
 
+    /**
+     * Послать заголовки ответа
+     * @return void
+     */
+    private function sendHeaders(): void
+    {
+        foreach ($this->headers as $header){
+            header($header);
+        }
+    }
+
+    /**
+     *
+     */
+    private function sendContent()
+    {
+        echo $this->content;
+    }
 }
