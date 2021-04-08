@@ -86,13 +86,13 @@ class Router
     private function controllerName(Request $request): string
     {
         $name = $request->controller();
+        $name = ucfirst(strtolower($name)) . 'Controller';
 
-
-        if (strtolower($name) === 'main' || empty($name) || !$this->controllerCheck($name)) {
+        if (!array_key_exists(self::CONTROLLER_NAMESPACE.$name, self::ROUTES) || empty($name) || !$this->controllerCheck($name)) {
             return 'MainController';
         }
 
-        return ucfirst(strtolower($name)) . 'Controller';
+        return $name;
     }
 
     /**

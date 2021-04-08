@@ -7,7 +7,7 @@ namespace Services;
 use Http\Request;
 
 /**
- * Класс-сервис, предоставляющий авторизацию
+ * Класс-сервис авторизации
  */
 class AuthService
 {

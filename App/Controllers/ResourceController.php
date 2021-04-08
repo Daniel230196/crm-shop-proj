@@ -9,6 +9,7 @@ namespace App\Controllers;
  */
 class ResourceController extends BaseController
 {
+
     public function default()
     {
     }

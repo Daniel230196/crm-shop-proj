@@ -4,24 +4,13 @@
 namespace App\Controllers;
 
 
-use Http\Request;
-use Services\SessionService;
-
-class LoginController extends BaseController
+class PipelineController extends BaseController
 {
     protected array $middleware = [
 
     ];
 
-    public function auth()
-    {
 
-    }
-
-    public function logout(Request $request)
-    {
-
-    }
     /**
      * @inheritDoc
      */

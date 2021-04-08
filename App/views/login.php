@@ -12,7 +12,7 @@
 <form action="">
     <input type="text">
     <input type="text">
-    <input type="text">
+    <input type="button">
 </form>
 </body>
 </html>
