@@ -22,7 +22,7 @@ class Application
     {
     }
 
-    public static function start()
+    public static function start(): void
     {
         Config::init();
 

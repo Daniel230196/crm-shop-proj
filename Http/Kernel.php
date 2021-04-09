@@ -42,14 +42,8 @@ class Kernel
 
     ];
 
-    /**
-     * @var Response
-     */
-    private Response $response;
-
     public function __construct()
     {
-        $this->response = new Response('ok');
     }
 
     public function handle(Request $request): Kernel
@@ -114,7 +108,10 @@ class Kernel
         return $this;
     }
 
-    public function terminate()
+    /**
+     *
+     */
+    public function terminate(): void
     {
         $this->response->resolve();
     }

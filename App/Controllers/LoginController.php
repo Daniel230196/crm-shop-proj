@@ -15,13 +15,12 @@ class LoginController extends BaseController
 
     public function login(Request $request, array $authData)
     {
-
     }
 
     public function logout(Request $request)
     {
-
     }
+
     /**
      * @inheritDoc
      */

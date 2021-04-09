@@ -10,7 +10,7 @@ use App\Middlewares\GuardMiddleware;
  * Class PageController
  * @package App\Controllers
  */
-class MainController extends BaseController
+class PageController extends BaseController
 {
     protected array $middleware = [
         'pipeline|main' => [
@@ -20,15 +20,15 @@ class MainController extends BaseController
 
     private const VIEW_PATH = 'App/views/';
 
-    public function main()
+    public function main(): void
     {
-        include self::VIEW_PATH.'main.php';
+        include self::VIEW_PATH.'index.php';
     }
-    public function pipeline()
+    public function pipeline(): void
     {
         include self::VIEW_PATH.'pipeline.php';
     }
-    public function login()
+    public function login(): void
     {
         include self::VIEW_PATH.'login.php';
     }

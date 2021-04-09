@@ -88,7 +88,7 @@ class Router
         $name = $request->controller();
 
 
-        if (strtolower($name) === 'main' || empty($name) || !$this->controllerCheck($name)) {
+        if ( empty($name) || strtolower($name) === 'page' || !$this->controllerCheck($name)) {
             return 'MainController';
         }
 
@@ -104,7 +104,7 @@ class Router
     private function method(Request $request, string $controllerClass): string
     {
         $method = $request->action();
-        if ($method && in_array($method,self::ROUTES[$controllerClass]) ){
+        if ($method && in_array($method, self::ROUTES[$controllerClass], true)){
             return $method;
         }
         return 'default';
