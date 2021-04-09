@@ -11,9 +11,15 @@ use Http\Request;
  */
 class AuthService
 {
+    private SessionService $session;
 
-    public function __construct()
+    public function __construct(SessionService $sessionService)
     {
+        $this->session = $sessionService;
+    }
 
+    public function test()
+    {
+        echo 'test';
     }
 }

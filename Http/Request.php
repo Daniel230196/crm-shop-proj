@@ -45,8 +45,8 @@ class Request
 
     public function __construct()
     {
-        $this->get = filter_var_array($_GET, INPUT_GET) == false ? null : $_GET;
-        $this->post = filter_var_array($_POST, INPUT_POST) == false ? null : $_POST;
+        $this->get = $this->clear($_GET);
+        $this->post = $this->clear($_POST);
         $this->requestHeaders = getallheaders();
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->uri = $_SERVER['REQUEST_URI'];
@@ -118,5 +118,21 @@ class Request
     private function explodeUri(): array
     {
         return explode('/',$this->uri);
+    }
+
+    /**
+     * @param array $data Данные GET/POST
+     * @return array
+     */
+    private function clear(array $data): array
+    {
+        foreach ($data as &$datum){
+            if(is_string($datum)){
+                $datum = trim($datum);
+                $datum = stripcslashes($datum);
+                $datum = htmlspecialchars($datum);
+            }
+        }
+        return $data;
     }
 }

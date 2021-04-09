@@ -5,6 +5,12 @@ namespace Services;
 
 class SessionService
 {
+
+    public function __construct()
+    {
+
+    }
+
     public static function init(): void
     {
         session_start();

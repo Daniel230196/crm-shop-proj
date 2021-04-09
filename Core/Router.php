@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core;
 
 use App\Controllers\BaseController;
+use App\Controllers\LoginController;
 use App\Controllers\MainController;
 use App\Controllers\ResourceController;
 use App\Controllers\UserController;
@@ -27,6 +28,10 @@ class Router
             'pipeline',
             'invoices'
         ],
+        LoginController::class => [
+            'auth',
+            'logout'
+        ]
     ];
 
     /**
@@ -138,7 +143,7 @@ class Router
 
         $middleware = $params['controller']->middleware();
 
-        if (!is_null($middleware)) {
+        if (!empty($middleware)) {
             $result = [];
             foreach( $middleware as $key=>$state){
                 $methodControl = explode('|' , $key );
