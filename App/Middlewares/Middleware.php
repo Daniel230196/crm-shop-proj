@@ -10,7 +10,7 @@ use Http\Response;
 /**
  * Абстрактный посредник запроса
  */
-abstract class Middleware
+abstract class Middleware implements MiddlewareInterface
 {
 
     /**

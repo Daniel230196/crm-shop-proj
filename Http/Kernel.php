@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Http;
 
+use App\Middlewares\SessionMiddleware;
 use Core\Exceptions\RouteException;
 use Core\Router;
 
@@ -31,7 +32,7 @@ class Kernel
      * @var array
      */
     private array $middleware = [
-
+        SessionMiddleware::class
     ];
 
     /**
@@ -92,8 +93,9 @@ class Kernel
         $response = new Response(
             [],
             200,
-            $this->resolveAction()
+            $this->routeAction
         );
+
         $this->response = $response;
 
         if(!empty($middlewares[0])){
@@ -104,6 +106,7 @@ class Kernel
             }
             $middlewares[0]($request, $response);
         }
+
 
         return $this;
     }
@@ -117,11 +120,11 @@ class Kernel
     }
 
     /**
-     * Выполнить метод контроллера
-     * @return mixed
+     * Передать
+     * @return array
      */
-    private function resolveAction()
+    private function resolveAction(): array
     {
-        return $this->routeAction['controller']->{$this->routeAction['action']}();
+        return $this->routeAction;
     }
 }

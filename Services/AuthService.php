@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Services;
 
+use App\Models\DomainModel;
+use App\Models\UserMapper;
 use Http\Request;
 
 /**
@@ -18,8 +20,23 @@ class AuthService
         $this->session = $sessionService;
     }
 
-    public function test()
+
+    public function authUser(Request $request): void
     {
-        echo 'test';
+        $mapper = new UserMapper();
+        $data = $request->post;
+        if($data['login'] && $data['password'] ) {
+            $user = $mapper->checkUser($data);
+            if (is_null($user)) {
+                header('Location:' . DEV_HOST . '/main/login', true, 301);
+                exit();
+            }
+
+            $this->session->set('user', $user);
+            header('Location:' . DEV_HOST . '/page/main', true, 301);
+            exit();
+        }
     }
+
+
 }

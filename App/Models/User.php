@@ -23,11 +23,10 @@ class User extends DomainModel
 
     public function __construct(array $row)
     {
-
         $this->login = $row['login'];
         $this->password = $row['password'];
-        $this->category_id = $row['category_id'];
-        parent::__construct($row['id']);
+        $this->category_id = (int)$row['category_id'];
+        parent::__construct((int)$row['id']);
     }
 
     public function getLogin(): string

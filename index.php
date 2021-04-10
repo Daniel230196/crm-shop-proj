@@ -7,4 +7,7 @@ require 'vendor/autoload.php';
 
 use App\Application;
 
+
 Application::start();
+
+var_dump($_SESSION);

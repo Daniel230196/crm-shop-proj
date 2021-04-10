@@ -14,14 +14,16 @@ class LoginController extends BaseController
 
     ];
 
-    public function auth()
+    public function auth(): void
     {
         $authService = ServiceFactory::getService('Auth');
+        $authService->authUser($this->request);
     }
 
-    public function logout(Request $request)
+    public function logout(): void
     {
-
+        $session = ServiceFactory::getService('Session');
+        $session->destroy();
     }
     /**
      * @inheritDoc

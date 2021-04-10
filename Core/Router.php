@@ -9,7 +9,7 @@ use App\Controllers\LoginController;
 use App\Controllers\MainController;
 use App\Controllers\ResourceController;
 use App\Controllers\UserController;
-use App\Middlewares\Middleware;
+use App\Middlewares\MiddlewareInterface;
 use Core\Exceptions\RouteException;
 use Http\Request;
 
@@ -72,9 +72,9 @@ class Router
             //$instance->$method();
             $this->statement = ['controller' => $instance, 'action' => $method];
             return $this->getMiddlewares($this->statement);
-        }else{
-            throw new RouteException('invalid controller method', 409);
         }
+
+        throw new RouteException('invalid controller method', 409);
 
     }
 
@@ -109,7 +109,7 @@ class Router
     private function method(Request $request, string $controllerClass): string
     {
         $method = $request->action();
-        if ($method && in_array($method,self::ROUTES[$controllerClass]) ){
+        if ($method && in_array($method, self::ROUTES[$controllerClass], true)){
             return $method;
         }
         return 'default';
@@ -126,32 +126,36 @@ class Router
         foreach (self::CONTROLLER_PATHS as $path) {
             $checkResults[] = file_exists($path . $name . '.php');
         }
-        return in_array(true, $checkResults);
+        return in_array(true, $checkResults, true);
     }
 
     /**
      * Получить middleware в соответствии с методом контроллера
      * @param array $params
-     * @return array|null
-     * @trows RouteException
+     * @return array
+     * @throws RouteException
+     * @throws \ReflectionException
      */
-    private function getMiddlewares(array $params): ?array
+    private function getMiddlewares(array $params): array
     {
         if (count($params) !== 2 || !($params['controller'] instanceof BaseController)) {
             throw new RouteException('invalid middleware params', 406);
         }
 
         $middleware = $params['controller']->middleware();
-
         if (!empty($middleware)) {
             $result = [];
             foreach( $middleware as $key=>$state){
                 $methodControl = explode('|' , $key );
-                $class = array_keys($state);
-                $params = array_values($state);
-                if(in_array($params['action'], $methodControl) && is_array($params) && $class instanceof Middleware ){
-                    $class::addParams($params);
+                $class = array_keys($state)[0];
+                $middlewareParams = $state[$class];
+                if(in_array($params['action'], $methodControl, true) &&
+                    (new \ReflectionClass($class))->implementsInterface(MiddlewareInterface::class))
+                {
+
+                    $class::addParams($middlewareParams);
                     $result[] = $class;
+
                 }else{
                     continue;
                 }

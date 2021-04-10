@@ -15,6 +15,8 @@ class Response
      */
     private ?string $content;
 
+
+    private array $contentAction;
     /**
      * HTTP-статус ответа
      * @var int
@@ -32,10 +34,11 @@ class Response
      */
     private array $headers;
 
-    public function __construct(array $headers ,$statusCode = 200, ?string $content="")
+    public function __construct(array $headers ,int $statusCode,array $contentAction ,?string $content="")
     {
         $this->content = $content;
         $this->statusCode = $statusCode;
+        $this->contentAction = $contentAction;
         $this->headers = $headers;
     }
 
@@ -50,10 +53,24 @@ class Response
         return $jsonMaker->makeJson($this);
     }
 
-    public function resolve()
+    /**
+     * Разрешение ответа. Заголовки + контент
+     * @return void
+     */
+    public function resolve(): void
     {
         $this->sendHeaders();
+        $this->resolveAction();
         $this->sendContent();
+    }
+
+    /**
+     * Разрешить метод контроллера в контент
+     * @return void
+     */
+    private function resolveAction(): void
+    {
+        $this->content = $this->contentAction['controller']->{$this->contentAction['action']}();
     }
 
     /**
@@ -70,8 +87,9 @@ class Response
     /**
      *
      */
-    private function sendContent()
+    private function sendContent(): void
     {
         echo $this->content;
     }
+
 }

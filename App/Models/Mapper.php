@@ -13,6 +13,7 @@ abstract class Mapper
     public function __construct()
     {
         static::$connection = Connection::getInstance();
+
     }
 
     /**
@@ -24,6 +25,7 @@ abstract class Mapper
     {
         $this->selectStmt()->execute([$id]);
         $row = $this->selectStmt()->fetch();
+        var_dump($row);
         $this->selectStmt()->closeCursor();
 
         if (! is_array($row) )  { return null; }

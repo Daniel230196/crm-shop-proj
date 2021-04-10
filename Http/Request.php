@@ -1,15 +1,16 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Http;
 
 
+use Services\SessionService;
+
 class Request
 {
     /**
      * Массив get-запроса
-     *@var ?array
+     * @var ?array
      */
     private ?array $get;
 
@@ -35,7 +36,7 @@ class Request
      * Заголовки запроса
      * @var ?array
      */
-    private ?array $requestHeaders;
+    private ?array $headers;
 
     /**
      * IP клиента
@@ -43,28 +44,33 @@ class Request
      */
     private ?string $client;
 
+    /**
+     * Обработчик сессий
+     * @var \SessionHandlerInterface
+     */
+    private \SessionHandlerInterface $session;
+
     public function __construct()
     {
         $this->get = $this->clear($_GET);
         $this->post = $this->clear($_POST);
-        $this->requestHeaders = getallheaders();
+        $this->headers = getallheaders();
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->uri = $_SERVER['REQUEST_URI'];
         $this->client = $_SERVER['REMOTE_ADDR'] ?? null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getIp(): ?string
     {
         return $this->client;
     }
 
-    /**
-     * Получить заголовки запроса
-     * @return array
-     */
-    private function headers(): ?array
+    public function setSession(\SessionHandlerInterface $sessionHandler)
     {
-        return getallheaders();
+        $this->session = $sessionHandler;
     }
 
     /**
@@ -134,5 +140,14 @@ class Request
             }
         }
         return $data;
+    }
+
+    /**
+     * Получить заголовки запроса
+     * @return array
+     */
+    private function headers(): ?array
+    {
+        return getallheaders();
     }
 }

@@ -23,7 +23,7 @@ class UserMapper extends Mapper
         parent::__construct();
 
         $this->authStmt = static::$connection->prepare(
-            'SELECT *FROM users WHERE login=?,password=?'
+            'SELECT * FROM users JOIN user_cathegories WHERE login=:login and password=:password'
         );
         $this->selectStmt = static::$connection->prepare(
             'SELECT * FROM users WHERE id=?'
@@ -35,6 +35,7 @@ class UserMapper extends Mapper
             'INSERT INTO users (login,password) VALUES (?,?)'
         );
     }
+
 
     public function update(DomainModel $model): void
     {
@@ -53,8 +54,7 @@ class UserMapper extends Mapper
 
     protected function doCreateObj(array $raw): DomainModel
     {
-        $obj = new User($raw);
-
+        return new User($raw);
     }
 
     protected function doInsert(DomainModel $user): void
@@ -69,13 +69,19 @@ class UserMapper extends Mapper
     }
 
     /**
-     * @param array $values логин/пароль пользователя
-     * @return ?array
+     * @param array $authData логин/пароль пользователя
+     * @return ?DomainModel
      */
-    public function checkUser(array $authData): ?int
+    public function checkUser(array $authData): ?DomainModel
     {
-        $this->authStmt->execute($authData);
-        $result = $this->authStmt->fetch();
-        return is_array($result) ? $result['id'] : null;
+        $this->authStmt->bindParam(":login", $authData['login'], \PDO::PARAM_STR);
+        $this->authStmt->bindParam(":password", $authData['password'], \PDO::PARAM_STR);
+
+        $this->authStmt->execute();
+        $raw = $this->authStmt->fetch();
+        var_dump($raw);
+        exit;
+        // TODO: Реализовать формирование сущности при авторизации
+        return is_array($raw) ? $this->doCreateObj($raw) : null;
     }
 }

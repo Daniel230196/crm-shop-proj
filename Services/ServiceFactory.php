@@ -9,6 +9,7 @@ use ReflectionClass;
 
 class ServiceFactory
 {
+
     private static array $instances = [];
 
     /**
@@ -17,6 +18,11 @@ class ServiceFactory
      */
     public static function getService(string $type): object
     {
+
+        if(self::$instances[$type]){
+            return self::$instances[$type];
+        }
+
         try{
             $instance = new self();
             if($instance->checkService($type)){
@@ -33,6 +39,7 @@ class ServiceFactory
             //TODO : handle
         }catch (ServiceResolverException $serviceResolverException){
             echo $serviceResolverException->getMessage();
+            exit;
             //TODO : handle
         }
     }
@@ -40,18 +47,22 @@ class ServiceFactory
     private function checkService(string $name): bool
     {
         $files = scandir(__DIR__);
-        return in_array($name.'Service.php', $files) ?? false;
+        return in_array($name.'Service.php', $files, true) ?? false;
     }
 
     /**
      * @param string $class
+     * @return object
      * @throws \ReflectionException
      */
     private function resolve(string $class): object
     {
         $reflection = new ReflectionClass($class);
         $constructor = $reflection->getConstructor();
-        $args = $constructor->getParameters();
+
+        if ($constructor !== null) {
+            $args = $constructor->getParameters();
+        }
 
         if(empty($args)){
             return $reflection->newInstanceWithoutConstructor();
