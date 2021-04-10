@@ -9,7 +9,7 @@ class Request
 {
     /**
      * Массив get-запроса
-     * @var ?array
+     *@var ?array
      */
     private ?array $get;
 
@@ -35,7 +35,7 @@ class Request
      * Заголовки запроса
      * @var ?array
      */
-    private ?array $headers;
+    private ?array $requestHeaders;
 
     /**
      * IP клиента
@@ -45,10 +45,9 @@ class Request
 
     public function __construct()
     {
-
         $this->get = $this->clear($_GET);
         $this->post = $this->clear($_POST);
-        $this->headers = getallheaders();
+        $this->requestHeaders = getallheaders();
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->uri = $_SERVER['REQUEST_URI'];
         $this->client = $_SERVER['REMOTE_ADDR'] ?? null;
@@ -74,8 +73,7 @@ class Request
      */
     public function isAjax(): bool
     {
-        return !empty($this->headers()['X-Requested-With']) ||
-            strpos($this->getHeader('Accepts'), 'application/json');
+        return !empty($this->headers()['HTTP_X_REQUESTED_WITH']);
     }
 
     /**
@@ -84,19 +82,7 @@ class Request
      */
     public function __get(string $name)
     {
-        return $this->$name ?? null;
-    }
-
-
-    public function __set(string $name, $value)
-    {
-        return null;
-    }
-
-
-    public function __isset($name): bool
-    {
-        return !empty($this->$name);
+        return isset($this->$name) ? $this->$name : null;
     }
 
     /**
@@ -134,37 +120,18 @@ class Request
         return explode('/',$this->uri);
     }
 
-    public function method(): ?string
+    /**
+     * @param array $data Данные GET/POST
+     * @return array
+     */
+    private function clear(array $data): array
     {
-        $uriParts = explode('/',$this->uri);
-
-        if(isset($uriParts[2])){
-          return strpos($uriParts[2],'?') ?
-                 explode('?',$uriParts[2])[0] :
-                 $uriParts[2];
-        }
-
-        return null;
-    }
-
-    public function getHeader($key): string
-    {
-        return $this->headers()[$key];
-    }
-
-    private function clear(array $data): ?array
-    {
-        if(count($data) < 1){
-            return null;
-        }
         foreach ($data as &$datum){
-            if(is_array($datum)){
-                $datum = $this->clear($datum);
+            if(is_string($datum)){
+                $datum = trim($datum);
+                $datum = stripcslashes($datum);
+                $datum = htmlspecialchars($datum);
             }
-
-            $datum = trim($datum);
-            $datum = stripslashes($datum);
-            $datum = htmlspecialchars($datum);
         }
         return $data;
     }

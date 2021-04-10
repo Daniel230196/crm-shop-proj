@@ -4,30 +4,22 @@ declare(strict_types = 1);
 
 namespace Services;
 
-use App\Models\Mapper;
 use Http\Request;
-use Http\Response;
 
 /**
  * Класс-сервис авторизации
  */
 class AuthService
 {
-    private Mapper $userMapper;
+    private SessionService $session;
 
-    public function __construct(Request $request, Response $response)
+    public function __construct(SessionService $sessionService)
     {
-
+        $this->session = $sessionService;
     }
 
-    private function validateInputForm()
+    public function test()
     {
-
+        echo 'test';
     }
-
-    private function session()
-    {
-    }
-
-
 }

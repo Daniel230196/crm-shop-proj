@@ -9,9 +9,9 @@
 </head>
 <body>
 <h1> Логин </h1>
-<form action="login/auth" enctype="multipart/form-data" method="post">
-    <input type="text">
-    <input type="text">
+<form action="login/auth" method="post">
+    <input type="text" name="login">
+    <input type="password" name="pass">
     <input type="submit">
 </form>
 </body>

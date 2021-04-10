@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 
 use Http\Request;
+use Services\ServiceFactory;
 use Services\SessionService;
 
 class LoginController extends BaseController
@@ -13,15 +14,15 @@ class LoginController extends BaseController
 
     ];
 
-    public function auth(): void
+    public function auth()
     {
-        var_dump($_REQUEST);
+        $authService = ServiceFactory::getService('Auth');
     }
 
     public function logout(Request $request)
     {
-    }
 
+    }
     /**
      * @inheritDoc
      */

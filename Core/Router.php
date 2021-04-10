@@ -31,7 +31,7 @@ class Router
         LoginController::class => [
             'auth',
             'logout'
-        ],
+        ]
     ];
 
     /**
@@ -143,7 +143,7 @@ class Router
 
         $middleware = $params['controller']->middleware();
 
-        if (!is_null($middleware)) {
+        if (!empty($middleware)) {
             $result = [];
             foreach( $middleware as $key=>$state){
                 $methodControl = explode('|' , $key );
