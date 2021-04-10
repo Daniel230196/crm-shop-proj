@@ -1,9 +1,13 @@
 <?php
-
+declare(strict_types=1);
 
 namespace App\Models;
 
 
+/**
+ * Class UserMapper
+ * @package App\Models
+ */
 class UserMapper extends Mapper
 {
     /**
@@ -32,9 +36,9 @@ class UserMapper extends Mapper
         );
     }
 
-    public function update(DomainModel $model)
+    public function update(DomainModel $model): void
     {
-        return $this->updateStmt;
+        $this->updateStmt()->execute([$model->getId()]);
     }
 
     protected function selectStmt(): \PDOStatement
@@ -42,12 +46,18 @@ class UserMapper extends Mapper
         return $this->selectStmt;
     }
 
+    protected function updateStmt(): \PDOStatement
+    {
+        return $this->updateStmt;
+    }
+
     protected function doCreateObj(array $raw): DomainModel
     {
         $obj = new User($raw);
+
     }
 
-    protected function doInsert(DomainModel $user)
+    protected function doInsert(DomainModel $user): void
     {
         $values = [
           $user->getLogin(),
@@ -62,9 +72,10 @@ class UserMapper extends Mapper
      * @param array $values логин/пароль пользователя
      * @return ?array
      */
-    public function checkUser(array $values) : ?array
+    public function checkUser(array $authData): ?int
     {
-        $this->authStmt->execute($values);
-        return $this->authStmt->fetch();
+        $this->authStmt->execute($authData);
+        $result = $this->authStmt->fetch();
+        return is_array($result) ? $result['id'] : null;
     }
 }

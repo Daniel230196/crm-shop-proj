@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core;
 
 use App\Controllers\BaseController;
+use App\Controllers\LoginController;
 use App\Controllers\MainController;
 use App\Controllers\ResourceController;
 use App\Controllers\UserController;
@@ -26,6 +27,10 @@ class Router
             'login',
             'pipeline',
             'invoices'
+        ],
+        LoginController::class => [
+            'auth',
+            'logout'
         ],
     ];
 
@@ -86,13 +91,13 @@ class Router
     private function controllerName(Request $request): string
     {
         $name = $request->controller();
+        $name = ucfirst(strtolower($name)) . 'Controller';
 
-
-        if ( empty($name) || strtolower($name) === 'page' || !$this->controllerCheck($name)) {
+        if (!array_key_exists(self::CONTROLLER_NAMESPACE.$name, self::ROUTES) || empty($name) || !$this->controllerCheck($name)) {
             return 'MainController';
         }
 
-        return ucfirst(strtolower($name)) . 'Controller';
+        return $name;
     }
 
     /**
@@ -104,7 +109,7 @@ class Router
     private function method(Request $request, string $controllerClass): string
     {
         $method = $request->action();
-        if ($method && in_array($method, self::ROUTES[$controllerClass], true)){
+        if ($method && in_array($method,self::ROUTES[$controllerClass]) ){
             return $method;
         }
         return 'default';

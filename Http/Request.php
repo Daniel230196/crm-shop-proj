@@ -9,7 +9,7 @@ class Request
 {
     /**
      * Массив get-запроса
-     *@var ?array
+     * @var ?array
      */
     private ?array $get;
 
@@ -35,7 +35,7 @@ class Request
      * Заголовки запроса
      * @var ?array
      */
-    private ?array $requestHeaders;
+    private ?array $headers;
 
     /**
      * IP клиента
@@ -45,9 +45,10 @@ class Request
 
     public function __construct()
     {
-        $this->get = filter_var_array($_GET, INPUT_GET) == false ? null : $_GET;
-        $this->post = filter_var_array($_POST, INPUT_POST) == false ? null : $_POST;
-        $this->requestHeaders = getallheaders();
+
+        $this->get = $this->clear($_GET);
+        $this->post = $this->clear($_POST);
+        $this->headers = getallheaders();
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->uri = $_SERVER['REQUEST_URI'];
         $this->client = $_SERVER['REMOTE_ADDR'] ?? null;
@@ -74,7 +75,7 @@ class Request
     public function isAjax(): bool
     {
         return !empty($this->headers()['X-Requested-With']) ||
-                strpos($this->getHeader('Accepts'), 'application/json');
+            strpos($this->getHeader('Accepts'), 'application/json');
     }
 
     /**
@@ -83,7 +84,19 @@ class Request
      */
     public function __get(string $name)
     {
-        return isset($this->$name) ? $this->$name : null;
+        return $this->$name ?? null;
+    }
+
+
+    public function __set(string $name, $value)
+    {
+        return null;
+    }
+
+
+    public function __isset($name): bool
+    {
+        return !empty($this->$name);
     }
 
     /**
@@ -137,5 +150,22 @@ class Request
     public function getHeader($key): string
     {
         return $this->headers()[$key];
+    }
+
+    private function clear(array $data): ?array
+    {
+        if(count($data) < 1){
+            return null;
+        }
+        foreach ($data as &$datum){
+            if(is_array($datum)){
+                $datum = $this->clear($datum);
+            }
+
+            $datum = trim($datum);
+            $datum = stripslashes($datum);
+            $datum = htmlspecialchars($datum);
+        }
+        return $data;
     }
 }

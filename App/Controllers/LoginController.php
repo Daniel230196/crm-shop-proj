@@ -13,8 +13,9 @@ class LoginController extends BaseController
 
     ];
 
-    public function login(Request $request, array $authData)
+    public function auth(): void
     {
+        var_dump($_REQUEST);
     }
 
     public function logout(Request $request)

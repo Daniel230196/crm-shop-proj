@@ -10,19 +10,19 @@ use App\Middlewares\GuardMiddleware;
  * Class PageController
  * @package App\Controllers
  */
-class PageController extends BaseController
+class MainController extends BaseController
 {
     protected array $middleware = [
-        'pipeline|main' => [
+        'pipeline|index' => [
             GuardMiddleware::class => ['admin', 'user'],
         ]
     ];
 
     private const VIEW_PATH = 'App/views/';
 
-    public function main(): void
+    public function index(): void
     {
-        include self::VIEW_PATH.'index.php';
+        include self::VIEW_PATH.'main.php';
     }
     public function pipeline(): void
     {

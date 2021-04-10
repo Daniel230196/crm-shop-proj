@@ -27,8 +27,9 @@ class Application
         Config::init();
 
         $request = new Request();
-        echo $request->action();
-        echo $request->controller();
+        echo '<pre>';
+        var_dump($request->headers);
+        echo '</pre>';
         $kernel = new Kernel();
         $kernel->route($request)
             ->thruPipeline($request)
