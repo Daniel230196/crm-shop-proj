@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Middlewares\GuardMiddleware;
-
 /**
  * Class PageController
  * @package App\Controllers
@@ -18,11 +16,12 @@ class MainController extends BaseController
         ]
     ];
 
-    private const VIEW_PATH = 'App/views/';
+    private const VIEW_PATH = 'App/templates/';
 
     public function index(): void
     {
-        include self::VIEW_PATH.'main.php';
+        /*include self::VIEW_PATH.'main.php'*/;
+        $this->view('Main');
     }
     public function pipeline(): void
     {
@@ -30,11 +29,12 @@ class MainController extends BaseController
     }
     public function login(): void
     {
-        include self::VIEW_PATH.'login.php';
+        $this->view('Login');
     }
 
     public function default()
     {
-        $this->login();
+        //$this->login();
+        $this->index();
     }
 }

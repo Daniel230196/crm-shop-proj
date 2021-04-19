@@ -4,9 +4,12 @@ declare(strict_types = 1);
 
 namespace App\Controllers;
 
+require_once 'App/helpers/helpers.php';
 
+use App\Middlewares\GuardMiddleware;
 use Closure;
 use Http\Request;
+use function App\helpers\view;
 
 /**
  * Class BaseController
@@ -45,4 +48,13 @@ abstract class BaseController
      * @return mixed
      */
     abstract public function default();
+
+    /**
+     * @param string $name
+     * @param array $viewData
+     */
+    protected function view(string $name, array $viewData = [])
+    {
+         view($name, $viewData);
+    }
 }

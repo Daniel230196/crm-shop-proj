@@ -19,7 +19,7 @@ class ServiceFactory
     public static function getService(string $type): object
     {
 
-        if(self::$instances[$type]){
+        if(@self::$instances[$type]){
             return self::$instances[$type];
         }
 

@@ -9,12 +9,15 @@
     "require": {
         "ext-xmlwriter" : "*",
         "ext-pdo": "*",
-      "ext-json": "*"
+      "ext-json": "*",
+        "doctrine/orm": "^2.8"
     },
     "autoload": {
         "psr-4": {
             "Http\\": "Http",
             "App\\": "App",
+            "App\\helpers\\": "App/helpers",
+            "App\\Views\\": "App/Views",
             "App\\Controllers\\": "App/Controllers",
             "App\\Middlewares\\": "App/Middlewares",
             "Core\\": "Core",
@@ -23,7 +26,8 @@
             "Services\\Interfaces\\" : "Services/Interfaces",
             "Services\\Traits\\" : "Services/Traits"
 
-        }
+        },
+        "files": ["App/helpers/helpers.php"]
     },
     "description": "test-crm-app",
     "require-dev": {
