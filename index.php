@@ -8,8 +8,7 @@ require 'App/helpers/helpers.php';
 use App\Application;
 
 
-
 Application::start();
 
 
-var_dump($_SESSION);
+/*var_dump(\Core\Connection::getEntityManager());*/

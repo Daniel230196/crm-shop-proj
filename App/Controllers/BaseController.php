@@ -51,10 +51,10 @@ abstract class BaseController
 
     /**
      * @param string $name
-     * @param array $viewData
+     * @param array|null $viewData
      */
-    protected function view(string $name, array $viewData = [])
+    protected function view(string $name, ?array $viewData = [])
     {
-         view($name, $viewData);
+        view($name, $viewData);
     }
 }

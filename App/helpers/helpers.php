@@ -24,7 +24,7 @@ function view(string $className, ?array $data = [])
 {
     $viewNamespace = VIEW_NAMESPACE;
     $viewPath = VIEW_PATH;
-    $className = VIEW_NAMESPACE . $className . 'View';
+    $className = VIEW_NAMESPACE . ucfirst(strtolower($className)) . 'View';
 
     if (class_exists($className)){
         $view = new $className($data);

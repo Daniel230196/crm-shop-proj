@@ -7,6 +7,7 @@ namespace Core;
 use App\Controllers\BaseController;
 use App\Controllers\LoginController;
 use App\Controllers\MainController;
+use App\Controllers\PipelineController;
 use App\Controllers\ResourceController;
 use App\Controllers\UserController;
 use App\Middlewares\MiddlewareInterface;
@@ -31,6 +32,9 @@ class Router
         LoginController::class => [
             'auth',
             'logout'
+        ],
+        PipelineController::class => [
+            'pipeline'
         ]
     ];
 

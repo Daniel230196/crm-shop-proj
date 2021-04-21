@@ -10,12 +10,15 @@ class PipelineController extends BaseController
 
     ];
 
-
+    public function pipeline()
+    {
+        $this->view('pipeline');
+    }
     /**
      * @inheritDoc
      */
     public function default()
     {
-        // TODO: Implement default() method.
+        $this->pipeline();
     }
 }

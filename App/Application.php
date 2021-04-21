@@ -25,7 +25,6 @@ class Application
     public static function start(): void
     {
         Config::init();
-
         $request = new Request();
         echo '<pre>';
         var_dump($request->headers);

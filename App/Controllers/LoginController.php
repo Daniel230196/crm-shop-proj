@@ -16,7 +16,7 @@ class LoginController extends BaseController
 
     public function auth(): void
     {
-        $authService = ServiceFactory::getService('Auth');
+        $authService  = ServiceFactory::getService('Auth');
         $authService->authUser($this->request);
     }
 
@@ -30,6 +30,6 @@ class LoginController extends BaseController
      */
     public function default()
     {
-        // TODO: Implement default() method.
+        $this->view('login');
     }
 }
