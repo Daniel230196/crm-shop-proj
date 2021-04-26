@@ -8,5 +8,6 @@ $isDevMode = true;
 $proxyDir = null;
 $cache = null;
 $useSimpleAnnotationReader = false;
-$config = Setup::createAnnotationMetadataConfiguration();
 
+
+return Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet(\Core\Connection::getEntityManager());

@@ -11,7 +11,7 @@ class MainView extends View
         parent::__construct($viewData);
     }
 
-    public function template()
+    public function renderTemplate()
     {
         include static::TEMP_PATH . 'main.php';
     }

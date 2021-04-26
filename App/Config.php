@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
+
+
 namespace App;
+
+set_include_path($_SERVER['PWD']);
 
 /**
  * Class Config
@@ -14,7 +18,7 @@ class Config
     /**
      * @const Путь к конфигам
      */
-    private const CONFIG_PATH = 'App/Config';
+    private const CONFIG_PATH = ROOT_DIR . '/App/Config';
 
     /**
      * Подключаемые при инициализации настройки
@@ -25,8 +29,12 @@ class Config
 
     public static function init(): void
     {
-        $conf = scandir(self::CONFIG_PATH);
+        if(!defined('\ROOT_DIR') ){
+            define('ROOT_DIR', $_SERVER['PWD']);
+        }
 
+        var_dump(\ROOT_DIR);
+        $conf = scandir(self::CONFIG_PATH);
         array_map(function ($el) {
             if($el !== '.' && $el !== '..'){
                 $position = strpos($el, '.php');

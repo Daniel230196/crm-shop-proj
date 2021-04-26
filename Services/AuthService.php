@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace Services;
 
-use App\Models\DomainModel;
-use App\Models\UserMapper;
+
 use Http\Request;
+
 
 /**
  * Класс-сервис авторизации
@@ -23,7 +23,7 @@ class AuthService
 
     public function authUser(Request $request): void
     {
-        $mapper = new UserMapper();
+        /*$mapper = new UserMapper();
         $data = $request->post;
         if($data['login'] && $data['password'] ) {
             $user = $mapper->checkUser($data);
@@ -35,7 +35,9 @@ class AuthService
             $this->session->set('user', $user);
             header('Location:' . DEV_HOST . '/page/main', true, 301);
             exit();
-        }
+        }*/
+
+        //TODO : переделатьт метод под доктрину
     }
 
 

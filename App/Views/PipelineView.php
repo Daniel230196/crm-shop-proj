@@ -10,7 +10,7 @@ class PipelineView extends View
     /**
      * @inheritDoc
      */
-    public function template()
+    public function renderTemplate()
     {
         include static::TEMP_PATH . 'pipeline.php';
     }

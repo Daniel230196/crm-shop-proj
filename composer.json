@@ -10,7 +10,8 @@
         "ext-xmlwriter" : "*",
         "ext-pdo": "*",
       "ext-json": "*",
-        "doctrine/orm": "^2.8"
+        "doctrine/orm": "^2.8",
+        "symfony/yaml": "2.*"
     },
     "autoload": {
         "psr-4": {
@@ -20,12 +21,15 @@
             "App\\Views\\": "App/Views",
             "App\\Controllers\\": "App/Controllers",
             "App\\Middlewares\\": "App/Middlewares",
+            "App\\Models\\": "App/Models",
             "Core\\": "Core",
             "Core\\Exceptions\\": "Core/Exceptions",
             "Services\\" : "Services",
             "Services\\Interfaces\\" : "Services/Interfaces",
             "Services\\Traits\\" : "Services/Traits"
-
+        },
+        "psr-0": {
+            "Entities": "App/Models/src"
         },
         "files": ["App/helpers/helpers.php"]
     },

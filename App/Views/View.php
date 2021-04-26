@@ -38,12 +38,12 @@ abstract class View
     public static function content(View $context)
     {
         var_dump($context);
-        $context->template();
+        $context->renderTemplate();
     }
 
     /**
      * @abstract Метод для композиции шаблонов
      */
-    abstract public function template();
+    abstract public function renderTemplate();
 
 }

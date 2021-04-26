@@ -64,13 +64,29 @@ class Connection
         }
     }
 
-    public static function getEntityManager()
+    /**
+     * @return EntityManager
+     */
+    public static function getEntityManager() : EntityManager
     {
-        $confEm = Setup::createAnnotationMetadataConfiguration(Config::database('EmConfig'));
+        Config::init();
+        $doctrineConfig = Config::database('doctrine');
+        $confEm = Setup::createAnnotationMetadataConfiguration(
+            [ $doctrineConfig['entityPath'] ],
+            $doctrineConfig['isDevMode'],
+            $doctrineConfig['proxyDir'],
+            $doctrineConfig['cache'],
+            $doctrineConfig['useSimpleAnnotationReader']
+            );
+
         try {
-            $connParams = DriverManager::getConnection(Config::database('mysql'));
+            $connection = DriverManager::getConnection(Config::database('mysql'));
+            return EntityManager::create($connection, $confEm);
+
         } catch (\Exception $e) {
-            var_dump($e->getMessage());
+
+            echo $e->getMessage();
+            exit();
         }
 
     }
