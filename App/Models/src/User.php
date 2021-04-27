@@ -121,6 +121,7 @@ class User
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
+     *
      */
     public function updatedTimestamps(): void
     {

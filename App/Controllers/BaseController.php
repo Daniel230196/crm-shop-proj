@@ -8,6 +8,8 @@ require_once 'App/helpers/helpers.php';
 
 use App\Middlewares\GuardMiddleware;
 use Closure;
+use Core\Connection;
+use Doctrine\ORM\EntityManager;
 use Http\Request;
 use function App\helpers\view;
 
@@ -24,6 +26,11 @@ abstract class BaseController
     protected array $middleware;
 
     /**
+     * @var EntityManager
+     */
+    protected EntityManager $em;
+
+    /**
      * @var Request
      */
     protected Request $request;
@@ -35,7 +42,7 @@ abstract class BaseController
     public function __construct(Request $request)
     {
         $this->request = $request;
- 
+        $this->em = Connection::getEntityManager();
     }
 
     public function middleware(): array

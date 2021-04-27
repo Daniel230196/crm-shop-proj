@@ -44,6 +44,11 @@ class ServiceFactory
         }
     }
 
+    /**
+     * Проверить наличие класса-сервиса в папке
+     * @param string $name
+     * @return bool
+     */
     private function checkService(string $name): bool
     {
         $files = scandir(__DIR__);
