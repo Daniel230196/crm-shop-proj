@@ -6,7 +6,7 @@ namespace Http;
 
 use App\Middlewares\SessionMiddleware;
 use Core\Exceptions\RouteException;
-use Core\Router;
+use Core\Routing\Router;
 
 /**
  * Class Kernel

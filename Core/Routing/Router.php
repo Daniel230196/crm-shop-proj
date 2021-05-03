@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Core;
+namespace Core\Routing;
 
 use App\Controllers\BaseController;
 use App\Controllers\LoginController;
@@ -58,6 +58,7 @@ class Router
      */
     private const CONTROLLER_NAMESPACE = 'App\Controllers\\';
 
+    private RoutingStrategy $strategy;
 
     /**
      * @param Request $request
@@ -170,4 +171,8 @@ class Router
         return [];
     }
 
+    private function getStrategy(Request $request): RoutingStrategy
+    {
+        return $request->controller() === 'api' ? new ApiStrategy() : new CommonStrategy();
+    }
 }

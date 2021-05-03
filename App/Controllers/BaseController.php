@@ -7,7 +7,6 @@ namespace App\Controllers;
 require_once 'App/helpers/helpers.php';
 
 use App\Middlewares\GuardMiddleware;
-use Closure;
 use Core\Connection;
 use Doctrine\ORM\EntityManager;
 use Http\Request;
