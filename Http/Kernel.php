@@ -63,6 +63,7 @@ class Kernel
     public function route(Request $request): Kernel
     {
         $router = new Router();
+
         try{
             $this->routeMiddleware = $router->start($request);
             $this->routeAction = $router->getStatement();

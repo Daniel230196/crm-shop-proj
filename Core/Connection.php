@@ -69,7 +69,6 @@ class Connection
      */
     public static function getEntityManager() : EntityManager
     {
-        Config::init();
         $doctrineConfig = Config::database('doctrine');
         $confEm = Setup::createAnnotationMetadataConfiguration(
             [ $doctrineConfig['entityPath'] ],

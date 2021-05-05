@@ -3,10 +3,14 @@
 declare(strict_types=1);
 
 
-
 namespace App;
 
-set_include_path($_SERVER['PWD']);
+
+
+if ('' === $_SERVER['DOCUMENT_ROOT']){
+    set_include_path($_SERVER['PWD']);
+}
+
 
 /**
  * Class Config
@@ -18,7 +22,7 @@ class Config
     /**
      * @const Путь к конфигам
      */
-    private const CONFIG_PATH = ROOT_DIR . '/App/Config';
+    private const CONFIG_PATH =  ROOT_DIR . '/App/Config';
 
     /**
      * Подключаемые при инициализации настройки
@@ -27,27 +31,31 @@ class Config
      */
     private static array $configs;
 
+
+    /**
+     * Инициализация класса с настройками
+     */
     public static function init(): void
     {
-        if(!defined('\ROOT_DIR') ){
+        require_once 'App/Config/constants.php';
+
+        if(!defined('\ROOT_DIR') || is_null($_SERVER['DOCUMENT_ROOT']) ){
             define('ROOT_DIR', $_SERVER['PWD']);
         }
 
-        var_dump(\ROOT_DIR);
-        $conf = scandir(self::CONFIG_PATH);
+        $conf = scandir(CONFIG_PATH);
+
         array_map(function ($el) {
             if($el !== '.' && $el !== '..'){
                 $position = strpos($el, '.php');
                 $configName = substr($el,0, $position);
+                $file = CONFIG_PATH.$el;
 
-                $file = self::CONFIG_PATH.'/'.$el;
-                self::$configs[$configName] = include $file ;
+                self::$configs[$configName] = require_once $file ;
 
             }
         }, $conf);
     }
-
-
 
     /**
      * Магия - массив с настройками, вызвав метода по имени файла с настройками

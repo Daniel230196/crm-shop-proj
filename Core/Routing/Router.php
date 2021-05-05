@@ -58,6 +58,11 @@ class Router
      */
     private const CONTROLLER_NAMESPACE = 'App\Controllers\\';
 
+    /**
+     * Стратегия для определения маршрутов
+     * @var RoutingStrategy
+     *
+     */
     private RoutingStrategy $strategy;
 
     /**
@@ -68,6 +73,10 @@ class Router
      */
     public function start(Request $request): array
     {
+        $this->strategy = $this->getStrategy($request);
+        $controller = $this->strategy->controller($request->uri);
+        $method = $this->strategy->method($request, )
+        exit();
         $controller = self::CONTROLLER_NAMESPACE . $this->controllerName($request);
         $method = $this->method($request, $controller);
         $instance = new $controller($request);
@@ -95,7 +104,7 @@ class Router
      */
     private function controllerName(Request $request): string
     {
-        $name = $request->controller();
+        $this->strategy->controllerName($request->uri);
         $name = ucfirst(strtolower($name)) . 'Controller';
 
         if (!array_key_exists(self::CONTROLLER_NAMESPACE.$name, self::ROUTES) || empty($name) || !$this->controllerCheck($name)) {
@@ -171,8 +180,18 @@ class Router
         return [];
     }
 
+    /**
+     * Определение стратегии роутинга
+     * @param Request $request
+     * @return RoutingStrategy
+     */
     private function getStrategy(Request $request): RoutingStrategy
     {
         return $request->controller() === 'api' ? new ApiStrategy() : new CommonStrategy();
+    }
+
+    public function setStrategy(Request $request)
+    {
+
     }
 }
