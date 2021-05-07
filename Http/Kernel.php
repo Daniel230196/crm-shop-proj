@@ -62,10 +62,10 @@ class Kernel
      */
     public function route(Request $request): Kernel
     {
-        $router = new Router();
+        $router = new Router($request->uri, $request->method);
 
         try{
-            $this->routeMiddleware = $router->start($request);
+            $this->routeMiddleware = $router->start($request->uri);
             $this->routeAction = $router->getStatement();
         }catch(\ReflectionException $e){
             echo $e->getMessage();
@@ -106,6 +106,7 @@ class Kernel
                 $middleware = $next ? new $middleware(new $next()) : new $middleware(null);
                 //TODO: реализовать формирование списка middleware
             }
+
             $middlewares[0]($request, $response);
         }
 

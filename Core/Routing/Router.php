@@ -16,26 +16,17 @@ use Http\Request;
 
 class Router
 {
+    public const STRATEGIES = [
+        ApiV1Strategy::URI_PATTERN => ApiV1Strategy::class ,
+        ApiV2Strategy::URI_PATTERN => ApiV2Strategy::class
+    ];
+
     /**
      * Доступные маршруты по контроллерам
      * @const array ROUTES
      */
     private const ROUTES = [
-        UserController::class => [],
-        ResourceController::class => [],
-        MainController::class => [
-            'index',
-            'login',
-            'pipeline',
-            'invoices'
-        ],
-        LoginController::class => [
-            'auth',
-            'logout'
-        ],
-        PipelineController::class => [
-            'pipeline'
-        ]
+
     ];
 
     /**
@@ -66,16 +57,27 @@ class Router
     private RoutingStrategy $strategy;
 
     /**
-     * @param Request $request
+     * Метод запроса
+     * @var string
+     */
+    private string $requestMethod;
+
+
+    public function __construct(string $requestUri, string $requestMethod)
+    {
+        $this->strategy = $this->getStrategy($requestUri);
+    }
+
+    /**
+     * @param string $uri
      * @return array
      * @throws \ReflectionException
      * @throws RouteException
      */
-    public function start(Request $request): array
+    public function start(string $uri): array
     {
-        $this->strategy = $this->getStrategy($request);
-        $controller = $this->strategy->controller($request->uri);
-        $method = $this->strategy->method($request, )
+        $controller = $this->strategy->controller($uri);
+        var_dump($controller);
         exit();
         $controller = self::CONTROLLER_NAMESPACE . $this->controllerName($request);
         $method = $this->method($request, $controller);
@@ -120,13 +122,14 @@ class Router
      * @param string $controllerClass
      * @return string
      */
-    private function method(Request $request, string $controllerClass): string
+    private function method(string $uri): string
     {
-        $method = $request->action();
+        /*$method = $request->action();
         if ($method && in_array($method, self::ROUTES[$controllerClass], true)){
             return $method;
         }
-        return 'default';
+        return 'default';*/
+        $this->strategy->
     }
 
     /**
@@ -181,17 +184,31 @@ class Router
     }
 
     /**
-     * Определение стратегии роутинга
-     * @param Request $request
+     * Определение стратегии роутинга по паттерну роута api
+     * @param string $uri
      * @return RoutingStrategy
      */
-    private function getStrategy(Request $request): RoutingStrategy
+    private function getStrategy(string $uri): RoutingStrategy
     {
-        return $request->controller() === 'api' ? new ApiStrategy() : new CommonStrategy();
+        $patterns = array_keys(self::STRATEGIES);
+        $strategy = CommonStrategy::class;
+
+        foreach ($patterns as $pattern){
+
+            if(1 === preg_match($pattern, $uri)){
+                $strategy = self::STRATEGIES[$pattern];
+            }
+        }
+
+        return new $strategy();
     }
 
     public function setStrategy(Request $request)
     {
 
+
+        switch(preg_match($request->uri)){
+
+        }
     }
 }

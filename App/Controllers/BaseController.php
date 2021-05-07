@@ -16,7 +16,7 @@ use function App\helpers\view;
  * Class BaseController
  * @package App\Controllers
  */
-abstract class BaseController
+abstract class BaseController implements ControllerInterface
 {
     /**
      * Массив обработчиков запроса контроллера

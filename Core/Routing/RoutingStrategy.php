@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Core\Routing;
 
+use App\Controllers\ControllerInterface;
 use Http\Request;
 
 abstract class RoutingStrategy
 {
 
+    public const URI_PATTERN = '';
     /**
      * Пути к контроллерам
      * @var array
      */
     protected static array $controllerPaths = [];
 
+    protected static string $defaultController;
     /**
      * Пространство имён контроллеров
      * @var string
@@ -39,15 +42,26 @@ abstract class RoutingStrategy
      * @param string $uri
      * @return string
      */
-    public function controller(string $uri): string
+    public function controller(string $uri): ControllerInterface
     {
-        return static::$controllerNamespace . $this->controllerName($uri);
+        $name = static::$controllerNamespace . $this->controllerName($uri) . 'Controller';
+
+        if(!array_key_exists($name, static::$routes) || !$this->controllerCheck($name) ){
+            return new static::$defaultController();
+        }
+        //return new static::$controllerNamespace . $this->controllerName($uri);
     }
 
-    abstract protected function controllerName(string $uri): string;
+    //abstract protected function controllerName(string $uri): string;
 
+    public function controllerName(string $uri): string
+    {
+        $uri = explode('/',$uri);
+        var_dump($uri[3]);
+        return $uri[3];
+    }
 
-    abstract protected function method(Request $request, string $controllerClass): string;
+    abstract protected function method(string $requestMethod, string $requestUri, string $controllerClass): string;
 
     /**
      * Проверка наличия контроллера в путях определенной стратегии
