@@ -67,6 +67,8 @@ class Kernel
         try{
             $this->routeMiddleware = $router->start($request->uri);
             $this->routeAction = $router->getStatement();
+
+            $this->routeAction['controller']->setRequest($request);
         }catch(\ReflectionException $e){
             echo $e->getMessage();
             exit();

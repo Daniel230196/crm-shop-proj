@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core\Routing;
 
 
+use App\Controllers\Api\v1\LeadsController;
 use Http\Request;
 
 /**
@@ -25,28 +26,39 @@ class ApiV1Strategy extends RoutingStrategy
 
     protected static string $controllerNamespace = 'App\Controllers\Api\v1\\';
 
-    protected static array $options = [
+    protected static array $routes = [
         'GET' => 'read',
         'POST' => 'create',
         'PATCH' => 'update',
-        'DELETE' => 'delete'
+        'DELETE' => 'delete',
+        LeadsController::class => [
+            'test',
+            'complex'
+        ]
     ];
+
+    protected static string $defaultController = LeadsController::class;
+
     public function getMiddlewares()
     {
-        // TODO: Implement getMiddlewares() method.
+
     }
 
     public function controllerName(string $uri): string
     {
-        $uri = explode('/',$uri);
-        var_dump($uri[3]);
-        return $uri[3];
+        $uriSegment = explode('/',preg_replace(self::URI_PATTERN, '', $uri))[1];
+        return  static::$controllerNamespace . ucfirst(strtolower($uriSegment)) . 'Controller';
     }
 
-    protected function method(string $requestMethod,string $requestUri, string $controllerClass): string
+    protected function method(string $requestMethod,string $requestUri): string
     {
-        $pattern = '/api/v1/';
-        $uri = str_ireplace($requestUri,$pattern,'');
+        $method = static::$routes[$requestMethod] ?? 'default';
 
+        if(preg_match('!api/v1/[\w]+/[\d]+/\w+!',$requestUri)){
+            $methodCheck = explode('/', $requestUri)[5];
+            $method = in_array($methodCheck, static::$routes[$this->controllerName]) ? $methodCheck : $method;
+        }
+
+        return $method;
     }
 }

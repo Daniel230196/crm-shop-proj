@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Core\Routing;
 
 use App\Controllers\ControllerInterface;
-use Http\Request;
 
 abstract class RoutingStrategy
 {
@@ -30,38 +29,50 @@ abstract class RoutingStrategy
      */
     protected static array $routes;
 
+    /**
+     * Имя контроллера
+     * @var string
+     */
+    protected string $controllerName;
+
+
     abstract protected function getMiddlewares();
 
-    public function __construct()
+    public function __construct(string $requestUri)
     {
-
+        $this->controllerName = $this->controllerName($requestUri);
     }
 
     /**
      * Получить готовое имя класса контроллера
      * @param string $uri
-     * @return string
+     * @return ControllerInterface
      */
     public function controller(string $uri): ControllerInterface
     {
-        $name = static::$controllerNamespace . $this->controllerName($uri) . 'Controller';
-
-        if(!array_key_exists($name, static::$routes) || !$this->controllerCheck($name) ){
+        if(!array_key_exists($this->controllerName, static::$routes) || !$this->controllerCheck($this->controllerName) ){
             return new static::$defaultController();
         }
-        //return new static::$controllerNamespace . $this->controllerName($uri);
+
+
+        return new ${$this->controllerName}();
     }
 
-    //abstract protected function controllerName(string $uri): string;
+    abstract protected function controllerName(string $uri): string;
 
-    public function controllerName(string $uri): string
+    /**
+     * Получить метод контроллера после всех проверок
+     * @param string $requestMethod
+     * @param string $requestUri
+     * @return string
+     */
+    public function getMethod(string $requestMethod, string $requestUri): string
     {
-        $uri = explode('/',$uri);
-        var_dump($uri[3]);
-        return $uri[3];
+        return $this->method($requestMethod, $requestUri);
     }
 
-    abstract protected function method(string $requestMethod, string $requestUri, string $controllerClass): string;
+
+    abstract protected function method(string $requestMethod, string $requestUri): string;
 
     /**
      * Проверка наличия контроллера в путях определенной стратегии

@@ -10,6 +10,9 @@ class ApiV2Strategy extends RoutingStrategy
 {
     public const URI_PATTERN = "^api/v2/^";
 
+    protected static array $routes = [
+
+    ];
     protected static string $controllerNamespace = 'App\Controllers\Api\V2\\';
 
     protected static array $controllerPaths = [
@@ -26,8 +29,8 @@ class ApiV2Strategy extends RoutingStrategy
         return 'Api v2 controller name';
     }
 
-    protected function method(Request $request, string $controllerClass): string
+    protected function method(string $requestMethod, string $requestUri): string
     {
-        // TODO: Implement method() method.
+        return 'APpiV2 Controller method';
     }
 }

@@ -40,6 +40,7 @@ class CommonStrategy extends RoutingStrategy
 
     ];
 
+    protected static string $defaultController = MainController::class;
 
     protected function getMiddlewares()
     {
@@ -52,9 +53,9 @@ class CommonStrategy extends RoutingStrategy
     }
 
 
-    protected function method(Request $request, string $controllerClass): string
+    protected function method(string $requestMethod, string $requestUri): string
     {
-
+        return 'Common Method';
     }
 
 }

@@ -36,12 +36,15 @@ abstract class BaseController implements ControllerInterface
 
     /**
      * BaseController constructor.
-     * @param Request $request
      */
-    public function __construct(Request $request)
+    public function __construct()
+    {
+        $this->em = Connection::getEntityManager();
+    }
+
+    public function setRequest(Request $request)
     {
         $this->request = $request;
-        $this->em = Connection::getEntityManager();
     }
 
     public function middleware(): array
