@@ -14,11 +14,12 @@ class BaseApiController implements ControllerInterface
 {
     protected EntityManager $em;
     protected Request $request;
-    protected array $middlewares;
+    protected array $middlewares = [
 
-    public function __construct(request $request)
+    ];
+
+    public function __construct()
     {
-        $this->request = $request;
         $this->em = Connection::getEntityManager();
     }
 
@@ -60,5 +61,10 @@ class BaseApiController implements ControllerInterface
     public function middleware(): array
     {
         return $this->middlewares;
+    }
+
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
     }
 }

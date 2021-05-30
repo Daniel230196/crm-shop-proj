@@ -19,6 +19,10 @@ if ('' === $_SERVER['DOCUMENT_ROOT']){
  */
 class Config
 {
+    /**
+     * @const Путь к конфигам
+     */
+    private const CONFIG_PATH =  ROOT_DIR . '/App/Config';
 
     /**
      * Подключаемые при инициализации настройки
@@ -42,13 +46,13 @@ class Config
 
         require_once 'App/Config/constants.php';
 
-        $conf = scandir( CONFIG_PATH);
+        $conf = scandir(CONFIG_PATH);
 
         array_map(function ($el) {
             if($el !== '.' && $el !== '..'){
                 $position = strpos($el, '.php');
                 $configName = substr($el,0, $position);
-                $file = CONFIG_PATH . '/' . $el;
+                $file = CONFIG_PATH.$el;
 
                 self::$configs[$configName] = require_once $file ;
 
@@ -58,7 +62,7 @@ class Config
     }
 
     /**
-     * Вызвав метода по имени файла с настройками
+     * Вызвов метода по имени файла с настройками
      * @param string $method
      * @param array $args
      * @return array|null

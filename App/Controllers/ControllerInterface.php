@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use Http\Request;
+
 /**
  * Общий интерфейс для всех контроллеров
  * Interface ControllerInterface
@@ -22,4 +24,10 @@ interface ControllerInterface
      * @return mixed
      */
     public function default() ;
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function setRequest(Request $request) ;
 }

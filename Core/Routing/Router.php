@@ -2,40 +2,24 @@
 
 declare(strict_types=1);
 
+
 namespace Core\Routing;
 
-use App\Controllers\BaseController;
-use App\Controllers\LoginController;
-use App\Controllers\MainController;
-use App\Controllers\PipelineController;
-use App\Controllers\ResourceController;
-use App\Controllers\UserController;
+
+use App\Controllers\ControllerInterface;
 use App\Middlewares\MiddlewareInterface;
 use Core\Exceptions\RouteException;
 use Http\Request;
 
 class Router
 {
+
+    /**
+     * Массив вида Паттерн урл => Имя класса стратегии роутинга
+     */
     public const STRATEGIES = [
         ApiV1Strategy::URI_PATTERN => ApiV1Strategy::class ,
         ApiV2Strategy::URI_PATTERN => ApiV2Strategy::class
-    ];
-
-    /**
-     * Доступные маршруты по контроллерам
-     * @const array ROUTES
-     */
-    private const ROUTES = [
-
-    ];
-
-    /**
-     * Пути к файлам классов контроллера
-     * @const array CONTROLLER_PATHS
-     */
-    private const CONTROLLER_PATHS = [
-        'App/Controllers/',
-        'App/Controllers/Api',
     ];
 
     /**
@@ -43,11 +27,6 @@ class Router
      * @var array
      */
     private array $statement;
-    /**
-     * @const CONTROLLER_NAMESPACE
-     *
-     */
-    private const CONTROLLER_NAMESPACE = 'App\Controllers\\';
 
     /**
      * Стратегия для определения маршрутов
@@ -66,6 +45,7 @@ class Router
     public function __construct(string $requestUri, string $requestMethod)
     {
         $this->strategy = $this->getStrategy($requestUri);
+        $this->requestMethod = $requestMethod;
     }
 
     /**
@@ -77,21 +57,17 @@ class Router
     public function start(string $uri): array
     {
         $controller = $this->strategy->controller($uri);
-        var_dump($controller);
-        exit();
-        $controller = self::CONTROLLER_NAMESPACE . $this->controllerName($request);
-        $method = $this->method($request, $controller);
-        $instance = new $controller($request);
-        $this->statement['controller'] = $instance;
+        $method = $this->strategy->getMethod($this->requestMethod, $uri);
+        $this->statement['controller'] = $controller;
+        $this->statement['action'] = $method;
 
         if ((new \ReflectionClass($controller))->hasMethod($method) && (new \ReflectionMethod($controller, $method))->isPublic()) {
-            //$instance->$method();
-            $this->statement = ['controller' => $instance, 'action' => $method];
+
             return $this->getMiddlewares($this->statement);
+
         }
 
         throw new RouteException('invalid controller method', 409);
-
     }
 
     public function getStatement(): array
@@ -99,37 +75,6 @@ class Router
         return $this->statement;
     }
 
-    /**
-     * Получить имя контроллера
-     * @param Request $request
-     * @return string
-     */
-    private function controllerName(Request $request): string
-    {
-        $name = $this->strategy->controllerName($request->uri);
-        $name = ucfirst(strtolower($name)) . 'Controller';
-
-        if (!array_key_exists(self::CONTROLLER_NAMESPACE.$name, self::ROUTES) || empty($name) || !$this->controllerCheck($name)) {
-            return 'MainController';
-        }
-
-        return $name;
-    }
-
-
-    /**
-     * Проверить наличие файла с классом в соответствии с CONTROLLER_PATHS
-     * @param string $name
-     * @return bool
-     */
-    private function controllerCheck(string $name): bool
-    {
-        $checkResults = [];
-        foreach (self::CONTROLLER_PATHS as $path) {
-            $checkResults[] = file_exists($path . $name . '.php');
-        }
-        return in_array(true, $checkResults, true);
-    }
 
     /**
      * Получить middleware в соответствии с методом контроллера
@@ -140,7 +85,7 @@ class Router
      */
     private function getMiddlewares(array $params): array
     {
-        if (count($params) !== 2 || !($params['controller'] instanceof BaseController)) {
+        if (count($params) !== 2 || !($params['controller'] instanceof ControllerInterface)) {
             throw new RouteException('invalid middleware params', 406);
         }
 
@@ -185,7 +130,7 @@ class Router
             }
         }
 
-        return new $strategy();
+        return new $strategy($uri);
     }
 
 }
