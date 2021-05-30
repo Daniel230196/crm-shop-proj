@@ -31,17 +31,20 @@ class Config
      */
     private static array $configs;
 
+    private static bool $initialized = false;
+
 
     /**
      * Инициализация класса с настройками
      */
     public static function init(): void
     {
-        require_once 'App/Config/constants.php';
 
-        if(!defined('\ROOT_DIR') || is_null($_SERVER['DOCUMENT_ROOT']) ){
-            define('ROOT_DIR', $_SERVER['PWD']);
+        if(!defined(ROOT_DIR) && is_null($_SERVER['DOCUMENT_ROOT']) ){
+            define(ROOT_DIR, $_SERVER['PWD']);
         }
+
+        require_once 'App/Config/constants.php';
 
         $conf = scandir(CONFIG_PATH);
 
@@ -49,22 +52,27 @@ class Config
             if($el !== '.' && $el !== '..'){
                 $position = strpos($el, '.php');
                 $configName = substr($el,0, $position);
-                $file = CONFIG_PATH.$el;
+                $file = CONFIG_PATH . '/' . $el;
 
                 self::$configs[$configName] = require_once $file ;
 
             }
         }, $conf);
+        self::$initialized = true;
     }
 
     /**
-     * Магия - массив с настройками, вызвав метода по имени файла с настройками
+     * Вызвов метода по имени файла с настройками
      * @param string $method
      * @param array $args
      * @return array|null
      */
     public static function __callStatic(string $method, array $args): ?array
     {
+        if(!self::$initialized){
+            self::init();
+        }
+
         if(!array_key_exists($method,static::$configs)){
             return null;
         }
