@@ -31,6 +31,7 @@ class ApiV1Strategy extends RoutingStrategy
         'PATCH' => 'update',
         'DELETE' => 'delete'
     ];
+
     public function getMiddlewares()
     {
         // TODO: Implement getMiddlewares() method.
@@ -47,6 +48,6 @@ class ApiV1Strategy extends RoutingStrategy
     {
         $pattern = '/api/v1/';
         $uri = str_ireplace($requestUri,$pattern,'');
-
+        return 'api/v1/method';
     }
 }

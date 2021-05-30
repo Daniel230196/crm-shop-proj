@@ -18,4 +18,5 @@ class Product
      * @ORM\GeneratedValue()
      */
     protected int $id;
+
 }

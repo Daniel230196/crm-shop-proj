@@ -106,7 +106,7 @@ class Router
      */
     private function controllerName(Request $request): string
     {
-        $this->strategy->controllerName($request->uri);
+        $name = $this->strategy->controllerName($request->uri);
         $name = ucfirst(strtolower($name)) . 'Controller';
 
         if (!array_key_exists(self::CONTROLLER_NAMESPACE.$name, self::ROUTES) || empty($name) || !$this->controllerCheck($name)) {
@@ -116,21 +116,6 @@ class Router
         return $name;
     }
 
-    /**
-     * Получить запрашиваемый метод контроллера
-     * @param Request $request
-     * @param string $controllerClass
-     * @return string
-     */
-    private function method(string $uri): string
-    {
-        /*$method = $request->action();
-        if ($method && in_array($method, self::ROUTES[$controllerClass], true)){
-            return $method;
-        }
-        return 'default';*/
-        $this->strategy->
-    }
 
     /**
      * Проверить наличие файла с классом в соответствии с CONTROLLER_PATHS
@@ -203,12 +188,4 @@ class Router
         return new $strategy();
     }
 
-    public function setStrategy(Request $request)
-    {
-
-
-        switch(preg_match($request->uri)){
-
-        }
-    }
 }

@@ -49,15 +49,12 @@ abstract class RoutingStrategy
         if(!array_key_exists($name, static::$routes) || !$this->controllerCheck($name) ){
             return new static::$defaultController();
         }
-        //return new static::$controllerNamespace . $this->controllerName($uri);
     }
 
-    //abstract protected function controllerName(string $uri): string;
 
     public function controllerName(string $uri): string
     {
         $uri = explode('/',$uri);
-        var_dump($uri[3]);
         return $uri[3];
     }
 

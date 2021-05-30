@@ -26,8 +26,8 @@ class ApiV2Strategy extends RoutingStrategy
         return 'Api v2 controller name';
     }
 
-    protected function method(Request $request, string $controllerClass): string
+    protected function method(string $requestMethod,string $requestUri, string $controllerClass): string
     {
-        // TODO: Implement method() method.
+        return 'api/v2 Method';
     }
 }
