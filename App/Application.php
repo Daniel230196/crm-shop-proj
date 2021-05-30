@@ -27,10 +27,6 @@ class Application
         Config::init();
         $request = new Request();
 
-  /*    echo '<pre>';
-        var_dump($request->headers);
-        echo '</pre>';*/
-
         $kernel = new Kernel();
         $kernel->route($request)
             ->thruPipeline($request)
@@ -38,9 +34,5 @@ class Application
             ->terminate();
     }
 
-    private function makeRequest(): Request
-    {
-        //TODO: implement
-    }
 
 }

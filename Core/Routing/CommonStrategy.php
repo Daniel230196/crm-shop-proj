@@ -49,13 +49,24 @@ class CommonStrategy extends RoutingStrategy
 
     public function controllerName(string $uri): string
     {
-        return '';
+        return $this->explodeUri($uri)[1] ?? static::$defaultController;
     }
 
 
     protected function method(string $requestMethod, string $requestUri): string
     {
-        return 'Common Method';
+        $method = $this->explodeUri($requestUri)[2] ?? null;
+
+        if(!is_null($method)){
+            return strpos($method, '?') ? stristr($method, '?', true) : $method ;
+        }
+
+        return 'default';
+    }
+
+    private function explodeUri(string $uri): array
+    {
+        return explode('/',$uri);
     }
 
 }

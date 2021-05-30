@@ -37,7 +37,6 @@ abstract class View
      */
     public static function content(View $context)
     {
-        var_dump($context);
         $context->renderTemplate();
     }
 

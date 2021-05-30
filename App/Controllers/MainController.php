@@ -22,7 +22,6 @@ class MainController extends BaseController
 
     public function index(): void
     {
-        /*include self::VIEW_PATH.'main.php'*/;
         $this->view('Main');
     }
     public function pipeline(): void
@@ -36,7 +35,6 @@ class MainController extends BaseController
 
     public function default()
     {
-        //$this->login();
         $this->index();
     }
 }

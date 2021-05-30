@@ -28,7 +28,6 @@ function view(string $className, ?array $data = [])
 
     if (class_exists($className)){
         $view = new $className($data);
-        var_dump($view);
     }
 
     echo 'error';
